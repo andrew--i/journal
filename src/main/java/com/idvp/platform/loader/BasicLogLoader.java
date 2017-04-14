@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class BasicLogLoader implements LogLoader {
@@ -18,20 +19,20 @@ public class BasicLogLoader implements LogLoader {
   public static final int DEFAULT_SLEEP_TIME = 3000;
 
 
-  private final Map<LogLoadingSession, LoadingRunnable> lrMap = new HashMap<>();
-  private final Map<LogDataCollector, List<LogLoadingSession>> ldCollectorToSession = new HashMap<>();
+  private final Map<LogLoadingSession, LoadingRunnable> lrMap = new ConcurrentHashMap<>();
+  private final Map<LogDataCollector, List<LogLoadingSession>> ldCollectorToSession = new ConcurrentHashMap<>();
 
 
   @Override
   public LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector) {
-    return startLoading(source, logImporter, logDataCollector, DEFAULT_SLEEP_TIME, Optional.empty());
+    return startLoading(source, logImporter, logDataCollector, DEFAULT_SLEEP_TIME);
   }
 
   @Override
-  public LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime, Optional<Long> bufferingTime) {
+  public LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime) {
 
 
-    final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, logDataCollector, sleepTime, bufferingTime);
+    final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, logDataCollector, sleepTime);
     final Thread thread = new Thread(loadingRunnable);
     thread.setDaemon(true);
     thread.start();

@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.idvp.platform.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
@@ -51,7 +52,7 @@ public class LogDataBuilder {
     return this;
   }
 
-  public LogDataBuilder withDate(Date date) {
+  public LogDataBuilder withDate(LocalDateTime date) {
     ld.setDate(date);
     return this;
   }

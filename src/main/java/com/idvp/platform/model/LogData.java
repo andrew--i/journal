@@ -18,6 +18,7 @@ package com.idvp.platform.model;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -28,7 +29,7 @@ import java.util.logging.Level;
 public class LogData implements Serializable {
 
     private static final long serialVersionUID = -2896759475612130817L;
-    private Date date = new Date();
+    private LocalDateTime date = LocalDateTime.now();
     private Level level = Level.INFO;
     private String messageId = "";
     private String clazz = "";

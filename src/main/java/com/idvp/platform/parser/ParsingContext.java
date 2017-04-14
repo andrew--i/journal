@@ -47,4 +47,8 @@ public class ParsingContext {
         customConextProperties = new HashMap<>();
     }
 
+    public int getGeneratedIdAndIncrease() {
+        return generatedId++;
+    }
+
 }

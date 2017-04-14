@@ -13,35 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.idvp.platform.importer;
+package com.idvp.platform.parser;
 
 
-import com.idvp.platform.collector.LogDataCollector;
-import com.idvp.platform.parser.ParsingContext;
+import com.idvp.platform.model.LogData;
 
-import javax.swing.*;
-import java.io.InputStream;
+import java.text.ParseException;
 import java.util.Properties;
 
-public interface LogImporter {
+public interface LogParser {
 
-    int LOG_IMPORTER_VERSION_1 = 1;
-
-    String PARSER_CLASS = "parser.class";
-
-    String PARSER_DISPLAYABLE_NAME = "parser.displayableName";
-    String PARSER_MNEMONIC = "parser.mnemonic";
-    String PARSER_KEY_STROKE_ACCELELATOR = "parser.keyStrokeAccelelator";
-    String PARSER_ICON = "parser.icon";
+    int LOG_PARSER_VERSION_1 = 1;
 
     void init(Properties properties);
 
-    /**
-     * Initialize parsing context specific resources, which are not thread safe (i.e. DateFormat)
-     *
-     * @param parsingContext
-     */
     void initParsingContext(ParsingContext parsingContext);
 
-    void importLogs(InputStream in, LogDataCollector dataCollector, ParsingContext parsingContext);
+    LogData parse(String line, ParsingContext parsingContext) throws ParseException;
+
+    ParserDescription getParserDescription();
 }
