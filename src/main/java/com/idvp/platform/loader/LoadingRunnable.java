@@ -108,7 +108,7 @@ public class LoadingRunnable implements Runnable {
       while (parsingContext.isParsingInProgress()) {
         try {
           SleepAction action;
-          observableInputStream = Optional.of(loadingInfo.getObserableInputStreamImpl());
+          observableInputStream = Optional.of(loadingInfo.getObservableInputStreamImpl());
           synchronized (this) {
             if (stop) {
               action = SleepAction.Break;

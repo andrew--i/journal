@@ -24,12 +24,11 @@ public class LoadingInfo {
 
   private String friendlyUrl;
   private FileObject fileObject;
-  private ObservableInputStreamImpl obserableInputStreamImpl;
+  private ObservableInputStreamImpl observableInputStreamImpl;
   private InputStream contentInputStream;
   private boolean tailing;
   private boolean gziped;
   private long lastFileSize = 0;
-  private byte[] inputStreamBufferedStart;
 
   public InputStream getContentInputStream() {
     return contentInputStream;
@@ -63,12 +62,12 @@ public class LoadingInfo {
     this.friendlyUrl = friendlyUrl;
   }
 
-  public ObservableInputStreamImpl getObserableInputStreamImpl() {
-    return obserableInputStreamImpl;
+  public ObservableInputStreamImpl getObservableInputStreamImpl() {
+    return observableInputStreamImpl;
   }
 
-  public void setObserableInputStreamImpl(ObservableInputStreamImpl obserableInputStreamImpl) {
-    this.obserableInputStreamImpl = obserableInputStreamImpl;
+  public void setObservableInputStreamImpl(ObservableInputStreamImpl observableInputStreamImpl) {
+    this.observableInputStreamImpl = observableInputStreamImpl;
   }
 
   public FileObject getFileObject() {
@@ -85,14 +84,6 @@ public class LoadingInfo {
 
   public void setLastFileSize(long lastFileSize) {
     this.lastFileSize = lastFileSize;
-  }
-
-  public byte[] getInputStreamBufferedStart() {
-    return inputStreamBufferedStart;
-  }
-
-  public void setInputStreamBufferedStart(byte[] inputStreamBufferedStart) {
-    this.inputStreamBufferedStart = inputStreamBufferedStart;
   }
 
 }

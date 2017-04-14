@@ -25,17 +25,7 @@ import java.util.Properties;
 
 public interface LogImporter {
 
-    int LOG_IMPORTER_VERSION_1 = 1;
-
-    String PARSER_CLASS = "parser.class";
-
-    String PARSER_DISPLAYABLE_NAME = "parser.displayableName";
-    String PARSER_MNEMONIC = "parser.mnemonic";
-    String PARSER_KEY_STROKE_ACCELELATOR = "parser.keyStrokeAccelelator";
-    String PARSER_ICON = "parser.icon";
-
     void init(Properties properties);
-
     /**
      * Initialize parsing context specific resources, which are not thread safe (i.e. DateFormat)
      *

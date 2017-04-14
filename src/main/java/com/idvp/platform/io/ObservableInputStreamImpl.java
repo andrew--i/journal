@@ -83,7 +83,6 @@ public class ObservableInputStreamImpl extends InputStream implements Observable
 
   public long skip(long n) throws IOException {
     final long skip = src.skip(n);
-//    current += skip;
     return skip;
   }
 

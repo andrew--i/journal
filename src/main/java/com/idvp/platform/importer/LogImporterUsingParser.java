@@ -133,10 +133,7 @@ public class LogImporterUsingParser implements LogImporter {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof LogImporterUsingParser) {
-      return parser.equals(((LogImporterUsingParser) obj).getParser());
-    }
-    return false;
+    return obj instanceof LogImporterUsingParser && parser.equals(((LogImporterUsingParser) obj).getParser());
   }
 
   @Override

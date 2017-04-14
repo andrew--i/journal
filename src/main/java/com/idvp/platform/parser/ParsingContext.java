@@ -29,7 +29,7 @@ public class ParsingContext {
     private volatile boolean parsingInProgress = true;
     private String name;
     private String logSource;
-    private HashMap<String, Object> customConextProperties;
+    private HashMap<String, Object> customContextProperties;
     private DateFormat dateFormat;
 
     public ParsingContext() {
@@ -44,7 +44,7 @@ public class ParsingContext {
         this.name = name;
         this.logSource = logSource;
         unmatchedLog = new StringBuilder();
-        customConextProperties = new HashMap<>();
+        customContextProperties = new HashMap<>();
     }
 
     public int getGeneratedIdAndIncrease() {
