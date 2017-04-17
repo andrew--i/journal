@@ -1,4 +1,4 @@
-package com.idvp.platform.journal.writer;
+package com.idvp.platform.journal.appender;
 
 import com.idvp.platform.journal.JournalRecordTransformer;
 import org.slf4j.LoggerFactory;

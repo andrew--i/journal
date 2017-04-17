@@ -17,7 +17,6 @@ public class JournalFactory extends ContextBase implements LifeCycle {
 
   private static Logger logger = LoggerFactory.getLogger(JournalFactory.class);
 
-  public static JournalFactory INSTANCE;
 
   public static final String AUTOCONFIG_FILE = "idvp.platform.journal.xml";
   public static final String AUTOCONFIG_FILE_PROPERTY = "idvp.platform.journal.config.file";
@@ -25,29 +24,27 @@ public class JournalFactory extends ContextBase implements LifeCycle {
   private Map<String, Journal> journals = new HashMap<>();
 
 
-  public static void lazyInit() {
-    if (INSTANCE == null) {
-      INSTANCE = new JournalFactory();
-    }
+  public void lazyInit() {
     try {
-      INSTANCE.init();
+      init();
     } catch (JournalException e) {
-      INSTANCE.stop();
-      INSTANCE = null;
+      stop();
       logger.error("Could not initialize journal factory");
-
     }
-  }
-
-  public static <T> Journal<T> get(String key) {
-    if (INSTANCE == null)
-      lazyInit();
-    return INSTANCE.journals.get(key);
   }
 
   private void init() throws JournalException {
-    autoConfig(INSTANCE, Loader.getTCL());
+    autoConfig(this, Loader.getTCL());
   }
+
+  public <T> Journal<T> get(String key) {
+    if (!isStarted()) {
+      lazyInit();
+      start();
+    }
+    return journals.get(key);
+  }
+
 
   private static void autoConfig(JournalFactory journalFactory, ClassLoader classLoader) throws JournalException {
 
@@ -89,14 +86,19 @@ public class JournalFactory extends ContextBase implements LifeCycle {
   }
 
   @Override
+  public void start() {
+    super.start();
+    for (Journal journal : journals.values()) {
+      journal.getJournalRecordsReader().open();
+    }
+  }
+
+  @Override
   public void stop() {
     super.stop();
     for (Journal journal : journals.values()) {
       journal.close();
     }
-  }
-
-  public static void shutdown() {
-    INSTANCE.stop();
+    journals.clear();
   }
 }

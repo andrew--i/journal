@@ -18,21 +18,21 @@ package com.idvp.platform.journal.reader.collector;
 
 import com.idvp.platform.journal.reader.model.LogData;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProxyLogDataCollector implements LogDataCollector {
 
-  private final LinkedList<LogData> list;
+  protected List<LogData> list;
 
   public ProxyLogDataCollector() {
-    list = new LinkedList<>();
+    list = new ArrayList<>();
   }
 
   public void add(LogData... logDatas) {
     for (LogData logData : logDatas) {
-      list.addLast(logData);
+      list.add(logData);
     }
-
   }
 
   public LogData[] getLogData() {

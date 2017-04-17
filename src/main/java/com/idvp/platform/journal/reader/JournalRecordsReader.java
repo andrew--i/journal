@@ -1,20 +1,22 @@
 package com.idvp.platform.journal.reader;
 
 import com.idvp.platform.journal.JournalRecordTransformer;
+import com.idvp.platform.journal.reader.collector.LogDataCollector;
 import com.idvp.platform.journal.reader.importer.LogImporterUsingParser;
 import com.idvp.platform.journal.reader.loader.BasicLogLoader;
 import com.idvp.platform.journal.reader.loading.Source;
 import com.idvp.platform.journal.reader.parser.LogParser;
 
-public class JournalRecordsLoader<T> {
+public class JournalRecordsReader<T> {
   private final BasicLogLoader basicLoader;
   private Source source;
   private JournalRecordCollector<T> journalRecordCollector;
   private LogParser logParser;
+  private String name;
 
-  public JournalRecordsLoader(Source source, Class<T> tClass) {
+  public JournalRecordsReader(Source source, Class<T> tClass, LogDataCollector logDataCollector) {
     JournalRecordTransformer<T> transformer = new JournalRecordTransformer<>(tClass);
-    this.journalRecordCollector = new JournalRecordCollector<>(transformer);
+    this.journalRecordCollector = new JournalRecordCollector<>(transformer, logDataCollector);
     this.logParser = new JournalRecordParser(transformer);
     this.basicLoader = new BasicLogLoader();
     this.source = source;
@@ -34,5 +36,13 @@ public class JournalRecordsLoader<T> {
 
   public JournalRecordCollector<T> getJournalRecordCollector() {
     return journalRecordCollector;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
   }
 }

@@ -31,6 +31,7 @@ public class JoranConfiguration extends JoranConfiguratorBase {
     rs.addRule(new ElementSelector("journals"), new JournalFactoryAction());
     rs.addRule(new ElementSelector("journals/journal"), new JournalAction());
     rs.addRule(new ElementSelector("journals/journal/appender"), new JournalAppenderAction());
+    rs.addRule(new ElementSelector("journals/journal/reader"), new JournalReaderAction());
   }
 
   @Override

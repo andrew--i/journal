@@ -6,8 +6,8 @@ import ch.qos.logback.core.util.DynamicClassLoadingException;
 import ch.qos.logback.core.util.IncompatibleClassException;
 import ch.qos.logback.core.util.OptionHelper;
 import com.idvp.platform.journal.Journal;
-import com.idvp.platform.journal.writer.JournalAppender;
-import com.idvp.platform.journal.writer.SLF4JJournalAppender;
+import com.idvp.platform.journal.appender.JournalAppender;
+import com.idvp.platform.journal.appender.SLF4JJournalAppender;
 import org.xml.sax.Attributes;
 
 public class JournalAppenderFactory {

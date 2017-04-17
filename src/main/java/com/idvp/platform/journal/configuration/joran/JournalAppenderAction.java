@@ -6,7 +6,7 @@ import ch.qos.logback.core.joran.spi.InterpretationContext;
 import ch.qos.logback.core.spi.LifeCycle;
 import ch.qos.logback.core.util.OptionHelper;
 import com.idvp.platform.journal.Journal;
-import com.idvp.platform.journal.writer.JournalAppender;
+import com.idvp.platform.journal.appender.JournalAppender;
 import org.xml.sax.Attributes;
 
 public class JournalAppenderAction extends Action {

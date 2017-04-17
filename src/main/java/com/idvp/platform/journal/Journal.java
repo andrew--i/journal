@@ -1,8 +1,7 @@
 package com.idvp.platform.journal;
 
-import com.idvp.platform.journal.reader.JournalRecordsLoader;
-import com.idvp.platform.journal.reader.loading.Source;
-import com.idvp.platform.journal.writer.JournalAppender;
+import com.idvp.platform.journal.appender.JournalAppender;
+import com.idvp.platform.journal.reader.JournalRecordsReader;
 
 import java.util.Optional;
 
@@ -20,12 +19,7 @@ public class Journal<T> {
   /**
    * Загрузчик записей журнала
    */
-  private JournalRecordsLoader<T> journalRecordsLoader;
-
-  /**
-   * Источник, откуда загружать логи
-   */
-  private Source source;
+  private JournalRecordsReader<T> journalRecordsReader;
 
   private JournalAppender<T> journalRecordAppender;
 
@@ -45,25 +39,21 @@ public class Journal<T> {
     this.journalRecordAppender = journalRecordAppender;
   }
 
-  public Source getSource() {
-    return source;
+  public void setJournalRecordsReader(JournalRecordsReader<T> journalRecordsReader) {
+    this.journalRecordsReader = journalRecordsReader;
   }
 
+  public JournalRecordsReader<T> getJournalRecordsReader() {
+    return journalRecordsReader;
+  }
 
-  public Journal(String key, Class<T> tClass, Source source) {
+  public Journal(String key, Class<T> tClass) {
     this.key = key;
     this.tClass = tClass;
-    this.source = source;
-    this.journalRecordsLoader = new JournalRecordsLoader<>(source, tClass);
-  }
-
-  public void open() {
-    this.journalRecordsLoader.open();
-
   }
 
   public void close() {
-    journalRecordsLoader.close();
+    journalRecordsReader.close();
     journalRecordAppender.stop();
   }
 
@@ -74,6 +64,6 @@ public class Journal<T> {
 
 
   public Optional<T> read() {
-    return this.journalRecordsLoader.getJournalRecordCollector().getRecord();
+    return this.journalRecordsReader.getJournalRecordCollector().getRecord();
   }
 }

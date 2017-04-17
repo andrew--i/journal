@@ -4,6 +4,7 @@ import ch.qos.logback.core.joran.action.Action;
 import ch.qos.logback.core.joran.spi.ActionException;
 import ch.qos.logback.core.joran.spi.InterpretationContext;
 import ch.qos.logback.core.util.StatusPrinter;
+import com.idvp.platform.journal.JournalFactory;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 

@@ -12,7 +12,7 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.xml.sax.Attributes;
 
 public class JournalAction extends Action {
-  private static final String SOURCE_ATTR = "source";
+
 
 
   @Override
@@ -26,20 +26,13 @@ public class JournalAction extends Action {
       addError("Journal attribute \"class\" is mandatory");
 
 
-    String sourceValue = ic.subst(attributes.getValue(SOURCE_ATTR));
-    if (StringUtils.isEmpty(sourceValue)) {
-      addError("Journal attribute \"source\" is mandatory");
-    }
 
-
-    if (!StringUtils.isEmpty(key) && !StringUtils.isEmpty(sClass) && !StringUtils.isEmpty(sourceValue))
+    if (!StringUtils.isEmpty(key) && !StringUtils.isEmpty(sClass))
       try {
 
-        ic.pushObject(new Journal(key, Class.forName(sClass), SourceFactory.create(sourceValue)));
+        ic.pushObject(new Journal(key, Class.forName(sClass)));
       } catch (ClassNotFoundException e) {
         addError("Journal record class not found", e);
-      } catch (FileSystemException e) {
-        addError("Journal source error", e);
       }
   }
 

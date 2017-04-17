@@ -1,5 +1,4 @@
 <configuration debug="true">
-
     <logger name="journalLogger">
         <appender name="journalFile" class="ch.qos.logback.core.FileAppender">
             <file>${JOURNAL_FILE_PATH}</file>
@@ -7,5 +6,4 @@
             <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
         </appender>
     </logger>
-
 </configuration>

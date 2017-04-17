@@ -1,4 +1,4 @@
-package com.idvp.platform.journal.writer;
+package com.idvp.platform.journal.appender;
 
 import ch.qos.logback.core.spi.ContextAware;
 import ch.qos.logback.core.spi.LifeCycle;

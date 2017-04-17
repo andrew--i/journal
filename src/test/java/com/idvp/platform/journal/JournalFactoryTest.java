@@ -4,38 +4,36 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-public class JournalFactoryTest {
+public class JournalFactoryTest extends JournalTestBase {
 
 
   @Test
   public void testOneJournalConfiguration() throws Exception {
     System.setProperty(JournalFactory.AUTOCONFIG_FILE_PROPERTY, "factory/one.journal.config.xml");
-    JournalFactory.lazyInit();
 
-    Journal<String> journal = JournalFactory.get("one");
+    Journal<String> journal = journalFactory.get("one");
     assertNotNull(journal);
 
     assertNotNull(journal.getTClass());
     assertNotNull(journal.getJournalRecordAppender());
-    assertNotNull(journal.getSource());
+    assertNotNull(journal.getJournalRecordsReader());
   }
 
   @Test
   public void testManyJournalConfiguration() throws Exception {
     System.setProperty(JournalFactory.AUTOCONFIG_FILE_PROPERTY, "factory/many.journal.config.xml");
-    JournalFactory.lazyInit();
 
-    Journal<String> journal_1 = JournalFactory.get("one");
+    Journal<String> journal_1 = journalFactory.get("one");
     assertNotNull(journal_1);
     assertNotNull(journal_1.getTClass());
     assertNotNull(journal_1.getJournalRecordAppender());
-    assertNotNull(journal_1.getSource());
+    assertNotNull(journal_1.getJournalRecordsReader());
 
-    Journal<String> journal_2 = JournalFactory.get("two");
+    Journal<String> journal_2 = journalFactory.get("two");
     assertNotNull(journal_2);
     assertNotNull(journal_2.getTClass());
     assertNotNull(journal_2.getJournalRecordAppender());
-    assertNotNull(journal_2.getSource());
+    assertNotNull(journal_2.getJournalRecordsReader());
 
   }
 }

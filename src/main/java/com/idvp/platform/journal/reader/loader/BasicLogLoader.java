@@ -116,7 +116,7 @@ public class BasicLogLoader implements LogLoader {
 
   @Override
   public void shutdown() {
-    System.out.println("Shutting down");
+    LOGGER.info("Shutting down");
     lrMap.values().stream().forEach(LoadingRunnable::stop);
     lrMap.clear();
   }
