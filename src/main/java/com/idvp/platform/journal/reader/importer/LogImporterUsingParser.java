@@ -35,12 +35,9 @@ public class LogImporterUsingParser implements LogImporter {
   private static final Logger LOGGER = LoggerFactory.getLogger(LogImporterUsingParser.class.getName());
   private LogParser parser = null;
 
-  private final ParserDescription pd;
-
   public LogImporterUsingParser(LogParser parser) {
     super();
     this.parser = parser;
-    pd = parser.getParserDescription();
   }
 
   @Override

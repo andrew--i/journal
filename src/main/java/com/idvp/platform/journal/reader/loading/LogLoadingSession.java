@@ -9,7 +9,7 @@ public class LogLoadingSession {
 
   @Getter
   private String id;
-  @Setter
+  @Getter
   private Source source;
 
 

@@ -4,8 +4,6 @@ import com.idvp.platform.journal.appender.JournalAppender;
 import com.idvp.platform.journal.reader.JournalRecordsReader;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Optional;
 
 public class Journal<T> {
 

@@ -23,22 +23,22 @@ public class JournalRecordCollector<T> implements LogDataCollector {
 
 
   @Override
-  public void add(LogData... logDatas) {
+  public synchronized void add(LogData... logDatas) {
     logDataCollector.add(logDatas);
   }
 
   @Override
-  public LogData[] getLogData() {
+  public synchronized LogData[] getLogData() {
     return logDataCollector.getLogData();
   }
 
   @Override
-  public int clear() {
+  public synchronized int clear() {
     return logDataCollector.clear();
   }
 
   public Collection<T> getRecords() {
-    final LogData[] logData = logDataCollector.getLogData();
+    final LogData[] logData = getLogData();
     List<T> records = Arrays.stream(logData)
         .map(ld -> journalRecordTransformer.fromString(ld.getMessage()))
         .filter(Optional::isPresent)
