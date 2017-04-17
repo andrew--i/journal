@@ -1,5 +1,6 @@
-package com.idvp.platform.journal;
+package com.idvp.platform.journal.reader;
 
+import com.idvp.platform.journal.JournalRecordTransformer;
 import com.idvp.platform.journal.reader.collector.LogDataCollector;
 import com.idvp.platform.journal.reader.model.LogData;
 

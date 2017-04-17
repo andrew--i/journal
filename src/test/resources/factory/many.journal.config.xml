@@ -1,0 +1,11 @@
+<journals debug="true" >
+    <journal key="one" class="java.lang.String"
+             source="file://D:\\Projects\\idvp\\journal\\sample.journal_1.txt">
+        <appender name="slf4j" class="com.idvp.platform.journal.writer.SLF4JJournalAppender" logger="journalLogger_1"/>
+    </journal>
+
+    <journal key="two" class="java.lang.String"
+             source="file://D:\\Projects\\idvp\\journal\\sample.journal_2.txt">
+        <appender name="slf4j" class="com.idvp.platform.journal.writer.SLF4JJournalAppender" logger="journalLogger_2"/>
+    </journal>
+</journals>
