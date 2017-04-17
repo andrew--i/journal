@@ -16,7 +16,7 @@ public class JournalFactoryTest {
     assertNotNull(journal);
 
     assertNotNull(journal.getTClass());
-    assertNotNull(journal.getJournalAppender());
+    assertNotNull(journal.getJournalRecordAppender());
     assertNotNull(journal.getSource());
   }
 
@@ -28,13 +28,13 @@ public class JournalFactoryTest {
     Journal<String> journal_1 = JournalFactory.get("one");
     assertNotNull(journal_1);
     assertNotNull(journal_1.getTClass());
-    assertNotNull(journal_1.getJournalAppender());
+    assertNotNull(journal_1.getJournalRecordAppender());
     assertNotNull(journal_1.getSource());
 
     Journal<String> journal_2 = JournalFactory.get("two");
     assertNotNull(journal_2);
     assertNotNull(journal_2.getTClass());
-    assertNotNull(journal_2.getJournalAppender());
+    assertNotNull(journal_2.getJournalRecordAppender());
     assertNotNull(journal_2.getSource());
 
   }

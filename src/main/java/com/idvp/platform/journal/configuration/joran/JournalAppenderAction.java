@@ -26,7 +26,7 @@ public class JournalAppenderAction extends Action {
       addInfo("About to instantiate appender of type [" + className + "]");
       journalAppender = JournalAppenderFactory.create(className, context, ic, attributes);
 
-      String appenderName = attributes.getValue(NAME_ATTRIBUTE);
+      String appenderName = ic.subst(attributes.getValue(NAME_ATTRIBUTE));
 
       if (OptionHelper.isEmpty(appenderName)) {
         addWarn(
@@ -73,6 +73,6 @@ public class JournalAppenderAction extends Action {
     }
 
     Journal journal = (Journal) ic.peekObject();
-    journal.setJournalAppender(journalAppender);
+    journal.setJournalRecordAppender(journalAppender);
   }
 }

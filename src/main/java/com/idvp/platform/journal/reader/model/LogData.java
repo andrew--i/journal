@@ -16,20 +16,20 @@
 package com.idvp.platform.journal.reader.model;
 
 import lombok.Data;
+import org.slf4j.event.Level;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 
 @Data
 public class LogData implements Serializable {
 
   private static final long serialVersionUID = -2896759475612130817L;
   private LocalDateTime date = LocalDateTime.now();
-  private Level level = Level.INFO;
+  private String level = Level.INFO.name();
   private String messageId = "";
   private String clazz = "";
   private String method = "";

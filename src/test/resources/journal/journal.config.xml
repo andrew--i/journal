@@ -1,0 +1,6 @@
+<journals debug="true">
+    <journal key="one" class="java.lang.String"
+             source="${JOURNAL_FILE_PATH}">
+        <appender name="slf4j" class="com.idvp.platform.journal.writer.SLF4JJournalAppender" logger="journalLogger"/>
+    </journal>
+</journals>

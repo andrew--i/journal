@@ -1,6 +1,5 @@
 package com.idvp.platform.journal;
 
-import com.idvp.platform.journal.reader.JournalRecordCollector;
 import com.idvp.platform.journal.reader.JournalRecordsLoader;
 import com.idvp.platform.journal.reader.loading.Source;
 import com.idvp.platform.journal.writer.JournalAppender;
@@ -19,11 +18,6 @@ public class Journal<T> {
   private Class<T> tClass;
 
   /**
-   * Собирает записи журнала
-   */
-  private JournalRecordCollector<T> journalRecordCollector;
-
-  /**
    * Загрузчик записей журнала
    */
   private JournalRecordsLoader<T> journalRecordsLoader;
@@ -33,7 +27,7 @@ public class Journal<T> {
    */
   private Source source;
 
-  private JournalAppender<T> journalAppender;
+  private JournalAppender<T> journalRecordAppender;
 
   public String getKey() {
     return key;
@@ -43,12 +37,12 @@ public class Journal<T> {
     return tClass;
   }
 
-  public JournalAppender<T> getJournalAppender() {
-    return journalAppender;
+  public JournalAppender<T> getJournalRecordAppender() {
+    return journalRecordAppender;
   }
 
-  public void setJournalAppender(JournalAppender journalAppender) {
-    this.journalAppender = journalAppender;
+  public void setJournalRecordAppender(JournalAppender journalRecordAppender) {
+    this.journalRecordAppender = journalRecordAppender;
   }
 
   public Source getSource() {
@@ -60,9 +54,7 @@ public class Journal<T> {
     this.key = key;
     this.tClass = tClass;
     this.source = source;
-    JournalRecordTransformer<T> transformer = new JournalRecordTransformer<>(tClass);
-    this.journalRecordCollector = new JournalRecordCollector<>(transformer);
-    this.journalRecordsLoader = new JournalRecordsLoader<>(source, this.journalRecordCollector, transformer);
+    this.journalRecordsLoader = new JournalRecordsLoader<>(source, tClass);
   }
 
   public void open() {
@@ -72,16 +64,16 @@ public class Journal<T> {
 
   public void close() {
     journalRecordsLoader.close();
-    journalAppender.stop();
+    journalRecordAppender.stop();
   }
 
 
   public void write(T record) throws JournalException {
-    journalAppender.doAppend(record);
+    journalRecordAppender.doAppend(record);
   }
 
 
   public Optional<T> read() {
-    return journalRecordCollector.getRecord();
+    return this.journalRecordsLoader.getJournalRecordCollector().getRecord();
   }
 }

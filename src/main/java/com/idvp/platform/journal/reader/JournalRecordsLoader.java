@@ -12,10 +12,10 @@ public class JournalRecordsLoader<T> {
   private JournalRecordCollector<T> journalRecordCollector;
   private LogParser logParser;
 
-  public JournalRecordsLoader(Source source, JournalRecordCollector<T> journalRecordCollector, JournalRecordTransformer<T> transformer) {
-    this.journalRecordCollector = journalRecordCollector;
+  public JournalRecordsLoader(Source source, Class<T> tClass) {
+    JournalRecordTransformer<T> transformer = new JournalRecordTransformer<>(tClass);
+    this.journalRecordCollector = new JournalRecordCollector<>(transformer);
     this.logParser = new JournalRecordParser(transformer);
-
     this.basicLoader = new BasicLogLoader();
     this.source = source;
 
@@ -30,5 +30,9 @@ public class JournalRecordsLoader<T> {
 
   public void close() {
     basicLoader.shutdown();
+  }
+
+  public JournalRecordCollector<T> getJournalRecordCollector() {
+    return journalRecordCollector;
   }
 }

@@ -2,6 +2,7 @@ package com.idvp.platform.journal.reader;
 
 import com.idvp.platform.journal.JournalRecordTransformer;
 import com.idvp.platform.journal.reader.collector.LogDataCollector;
+import com.idvp.platform.journal.reader.collector.ProxyLogDataCollector;
 import com.idvp.platform.journal.reader.model.LogData;
 
 import java.util.Optional;
@@ -14,10 +15,13 @@ public class JournalRecordCollector<T> implements LogDataCollector {
 
   public JournalRecordCollector(JournalRecordTransformer<T> journalRecordTransformer) {
     this.journalRecordTransformer = journalRecordTransformer;
+    this.logDataCollector = new ProxyLogDataCollector();
   }
 
   public Optional<T> getRecord() {
     final LogData[] logData = logDataCollector.getLogData();
+    if (logData.length == 0)
+      return Optional.empty();
     final LogData lastRecord = logData[logData.length - 1];
     return journalRecordTransformer.fromString(lastRecord.getMessage());
   }

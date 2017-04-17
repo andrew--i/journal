@@ -34,7 +34,7 @@ public class JournalRecordParser<T> implements LogParser {
 
   @Override
   public LogData parse(String line, ParsingContext parsingContext) throws ParseException {
-    return null;
+    return transformer.toLogData(line, parsingContext);
   }
 
   @Override

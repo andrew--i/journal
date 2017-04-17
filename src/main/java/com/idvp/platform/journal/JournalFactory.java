@@ -5,6 +5,8 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.spi.LifeCycle;
 import ch.qos.logback.core.util.Loader;
 import com.idvp.platform.journal.configuration.joran.JoranConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -12,6 +14,8 @@ import java.util.Map;
 
 public class JournalFactory extends ContextBase implements LifeCycle {
 
+
+  private static Logger logger = LoggerFactory.getLogger(JournalFactory.class);
 
   public static JournalFactory INSTANCE;
 
@@ -21,14 +25,23 @@ public class JournalFactory extends ContextBase implements LifeCycle {
   private Map<String, Journal> journals = new HashMap<>();
 
 
-  public static void lazyInit() throws JournalException {
+  public static void lazyInit() {
     if (INSTANCE == null) {
       INSTANCE = new JournalFactory();
     }
-    INSTANCE.init();
+    try {
+      INSTANCE.init();
+    } catch (JournalException e) {
+      INSTANCE.stop();
+      INSTANCE = null;
+      logger.error("Could not initialize journal factory");
+
+    }
   }
 
   public static <T> Journal<T> get(String key) {
+    if (INSTANCE == null)
+      lazyInit();
     return INSTANCE.journals.get(key);
   }
 
@@ -36,7 +49,7 @@ public class JournalFactory extends ContextBase implements LifeCycle {
     autoConfig(INSTANCE, Loader.getTCL());
   }
 
-  public static void autoConfig(JournalFactory journalFactory, ClassLoader classLoader) throws JournalException {
+  private static void autoConfig(JournalFactory journalFactory, ClassLoader classLoader) throws JournalException {
 
     String autoConfigFileByProperty = System.getProperty(AUTOCONFIG_FILE_PROPERTY);
     URL url;
@@ -81,5 +94,9 @@ public class JournalFactory extends ContextBase implements LifeCycle {
     for (Journal journal : journals.values()) {
       journal.close();
     }
+  }
+
+  public static void shutdown() {
+    INSTANCE.stop();
   }
 }

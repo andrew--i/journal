@@ -56,7 +56,7 @@ public class LogDataBuilder {
     return this;
   }
 
-  public LogDataBuilder withLevel(Level level) {
+  public LogDataBuilder withLevel(String level) {
     ld.setLevel(level);
     return this;
   }

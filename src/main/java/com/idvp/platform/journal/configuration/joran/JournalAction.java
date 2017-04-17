@@ -18,15 +18,15 @@ public class JournalAction extends Action {
   @Override
   public void begin(InterpretationContext ic, String name, Attributes attributes) throws ActionException {
 
-    final String key = attributes.getValue(KEY_ATTRIBUTE);
+    final String key = ic.subst(attributes.getValue(KEY_ATTRIBUTE));
     if (StringUtils.isEmpty(key))
       addError("Journal attribute \"key\" is mandatory");
-    final String sClass = attributes.getValue(CLASS_ATTRIBUTE);
+    final String sClass = ic.subst(attributes.getValue(CLASS_ATTRIBUTE));
     if (StringUtils.isEmpty(sClass))
       addError("Journal attribute \"class\" is mandatory");
 
 
-    String sourceValue = attributes.getValue(SOURCE_ATTR);
+    String sourceValue = ic.subst(attributes.getValue(SOURCE_ATTR));
     if (StringUtils.isEmpty(sourceValue)) {
       addError("Journal attribute \"source\" is mandatory");
     }
