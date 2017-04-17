@@ -14,7 +14,7 @@ public class JournalFactoryConfigurator {
   public static final String AUTOCONFIG_FILE_PROPERTY = "idvp.platform.journal.config.file";
 
 
-  public static void autoConfig(JournalFactory journalFactory, ClassLoader classLoader) throws JournalException {
+  public void autoConfig(JournalFactory journalFactory, ClassLoader classLoader) throws JournalException {
 
     String autoConfigFileByProperty = System.getProperty(AUTOCONFIG_FILE_PROPERTY);
     URL url;
@@ -37,7 +37,7 @@ public class JournalFactoryConfigurator {
     }
   }
 
-  private static void configureByResource(JournalFactory context, URL url) throws JournalException {
+  private void configureByResource(JournalFactory context, URL url) throws JournalException {
     JoranConfiguration configurator = new JoranConfiguration();
     configurator.setContext(context);
 
@@ -48,4 +48,8 @@ public class JournalFactoryConfigurator {
     }
   }
 
+  public void config(JournalFactory journalFactory, String configPath, ClassLoader tcl) throws JournalException {
+    URL url = tcl.getResource(configPath);
+    configureByResource(journalFactory, url);
+  }
 }

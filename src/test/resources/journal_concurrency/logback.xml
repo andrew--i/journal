@@ -1,0 +1,18 @@
+<configuration debug="true">
+    <logger name="journalLogger1">
+        <appender name="journalFile1" class="ch.qos.logback.core.FileAppender">
+            <file>${JOURNAL_FILE_PATH}_1.journal</file>
+            <append>true</append>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        </appender>
+    </logger>
+
+    <logger name="journalLogger2">
+        <appender name="journalFile2" class="ch.qos.logback.core.FileAppender">
+            <file>${JOURNAL_FILE_PATH}_2.journal</file>
+            <append>true</append>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        </appender>
+    </logger>
+
+</configuration>

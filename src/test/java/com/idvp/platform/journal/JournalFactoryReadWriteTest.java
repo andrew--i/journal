@@ -11,7 +11,7 @@ public class JournalFactoryReadWriteTest extends JournalTestBase {
 
   @Override
   protected String getJournalFile() {
-    return "JournalFactoryReadWriteTest.journal.txt";
+    return "target/tests/JournalFactoryReadWriteTest.journal.txt";
   }
 
   @Override

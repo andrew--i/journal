@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class BasicLogLoader implements LogLoader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BasicLogLoader.class);
-  public static final int DEFAULT_SLEEP_TIME = 3000;
+  public static final int DEFAULT_SLEEP_TIME = 2000;
 
 
   private final Map<LogLoadingSession, LoadingRunnable> lrMap = new ConcurrentHashMap<>();

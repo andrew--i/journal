@@ -19,10 +19,24 @@ public class JournalFactory extends ContextBase implements LifeCycle {
   private static Logger logger = LoggerFactory.getLogger(JournalFactory.class);
   private Map<String, Journal> journals = new HashMap<>();
 
+  private String configPath;
+
+  public JournalFactory() {
+  }
+
+  public JournalFactory(String configPath) {
+    this.configPath = configPath;
+  }
+
 
   public void lazyInit() {
     try {
-      new JournalFactoryConfigurator().autoConfig(this, Loader.getTCL());
+      JournalFactoryConfigurator journalFactoryConfigurator = new JournalFactoryConfigurator();
+      if (configPath == null) {
+        journalFactoryConfigurator.autoConfig(this, Loader.getTCL());
+      } else {
+        journalFactoryConfigurator.config(this, configPath, Loader.getTCL());
+      }
     } catch (JournalException e) {
       stop();
       logger.error("Could not initialize journal factory");

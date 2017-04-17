@@ -12,7 +12,7 @@ public class JournalTest extends JournalTestBase {
 
   @Override
   protected String getJournalFile() {
-    return "JournalTest.journal.txt";
+    return "target/tests/JournalTest.journal.txt";
   }
 
   @Override
