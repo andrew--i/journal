@@ -19,7 +19,6 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 
