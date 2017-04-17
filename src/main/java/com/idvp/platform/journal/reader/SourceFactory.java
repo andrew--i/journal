@@ -1,4 +1,4 @@
-package com.idvp.platform.journal;
+package com.idvp.platform.journal.reader;
 
 import com.idvp.platform.journal.reader.loading.Source;
 import com.idvp.platform.journal.reader.loading.VfsSource;

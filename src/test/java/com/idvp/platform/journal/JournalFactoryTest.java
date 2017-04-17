@@ -1,5 +1,6 @@
 package com.idvp.platform.journal;
 
+import com.idvp.platform.journal.configuration.JournalFactoryConfigurator;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -9,7 +10,7 @@ public class JournalFactoryTest extends JournalTestBase {
 
   @Test
   public void testOneJournalConfiguration() throws Exception {
-    System.setProperty(JournalFactory.AUTOCONFIG_FILE_PROPERTY, "factory/one.journal.config.xml");
+    System.setProperty(JournalFactoryConfigurator.AUTOCONFIG_FILE_PROPERTY, "factory/one.journal.config.xml");
 
     Journal<String> journal = journalFactory.get("one");
     assertNotNull(journal);
@@ -21,7 +22,7 @@ public class JournalFactoryTest extends JournalTestBase {
 
   @Test
   public void testManyJournalConfiguration() throws Exception {
-    System.setProperty(JournalFactory.AUTOCONFIG_FILE_PROPERTY, "factory/many.journal.config.xml");
+    System.setProperty(JournalFactoryConfigurator.AUTOCONFIG_FILE_PROPERTY, "factory/many.journal.config.xml");
 
     Journal<String> journal_1 = journalFactory.get("one");
     assertNotNull(journal_1);

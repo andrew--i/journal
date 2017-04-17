@@ -3,6 +3,8 @@ package com.idvp.platform.journal;
 import com.idvp.platform.journal.appender.JournalAppender;
 import com.idvp.platform.journal.reader.JournalRecordsReader;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Optional;
 
 public class Journal<T> {
@@ -62,8 +64,7 @@ public class Journal<T> {
     journalRecordAppender.doAppend(record);
   }
 
-
-  public Optional<T> read() {
-    return this.journalRecordsReader.getJournalRecordCollector().getRecord();
+  public Collection<T> read() {
+    return this.journalRecordsReader.getJournalRecordCollector().getRecords();
   }
 }

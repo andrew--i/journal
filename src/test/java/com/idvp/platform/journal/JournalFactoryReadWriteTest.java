@@ -5,14 +5,13 @@ import org.junit.Test;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
-public class JournalTest extends JournalTestBase {
+public class JournalFactoryReadWriteTest extends JournalTestBase {
 
 
   @Override
   protected String getJournalFile() {
-    return "JournalTest.journal.txt";
+    return "JournalFactoryReadWriteTest.journal.txt";
   }
 
   @Override
@@ -21,14 +20,15 @@ public class JournalTest extends JournalTestBase {
   }
 
   @Test
-  public void testJournalApi() throws Exception {
+  public void testJournalFactoryReadWrite() throws Exception {
     System.setProperty(JournalFactoryConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal/journal.config.xml");
-    Journal<String> journal = journalFactory.get("other_journal");
-    assertNotNull(journal);
-    String message = "some record at " + System.currentTimeMillis();
-    journal.write(message);
 
-    await().until(() -> journal.read().iterator().hasNext());
-    assertEquals(message, journal.read().iterator().next());
+    String message = "some record at " + System.currentTimeMillis();
+    journalFactory.write(message);
+
+    await().until(() -> !journalFactory.read("other_journal").isEmpty());
+
+    assertEquals(message, journalFactory.read("other_journal").iterator().next());
+    assertEquals(message, journalFactory.read(String.class).iterator().next());
   }
 }

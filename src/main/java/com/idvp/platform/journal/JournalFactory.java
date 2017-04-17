@@ -1,82 +1,43 @@
 package com.idvp.platform.journal;
 
 import ch.qos.logback.core.ContextBase;
-import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.spi.LifeCycle;
 import ch.qos.logback.core.util.Loader;
-import com.idvp.platform.journal.configuration.joran.JoranConfiguration;
+import com.idvp.platform.journal.configuration.JournalFactoryConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class JournalFactory extends ContextBase implements LifeCycle {
 
 
   private static Logger logger = LoggerFactory.getLogger(JournalFactory.class);
-
-
-  public static final String AUTOCONFIG_FILE = "idvp.platform.journal.xml";
-  public static final String AUTOCONFIG_FILE_PROPERTY = "idvp.platform.journal.config.file";
-
   private Map<String, Journal> journals = new HashMap<>();
 
 
   public void lazyInit() {
     try {
-      init();
+      new JournalFactoryConfigurator().autoConfig(this, Loader.getTCL());
     } catch (JournalException e) {
       stop();
       logger.error("Could not initialize journal factory");
     }
   }
 
-  private void init() throws JournalException {
-    autoConfig(this, Loader.getTCL());
+  public <T> Journal<T> get(String key) {
+    checkStartFactory();
+    return journals.getOrDefault(key, null);
   }
 
-  public <T> Journal<T> get(String key) {
+  private synchronized void checkStartFactory() {
     if (!isStarted()) {
       lazyInit();
       start();
-    }
-    return journals.get(key);
-  }
-
-
-  private static void autoConfig(JournalFactory journalFactory, ClassLoader classLoader) throws JournalException {
-
-    String autoConfigFileByProperty = System.getProperty(AUTOCONFIG_FILE_PROPERTY);
-    URL url;
-
-    if (autoConfigFileByProperty != null) {
-      url = Loader.getResource(autoConfigFileByProperty, classLoader);
-    } else {
-      url = Loader.getResource(AUTOCONFIG_FILE, classLoader);
-    }
-    if (url != null) {
-      configureByResource(journalFactory, url);
-    } else {
-      String errMsg;
-      if (autoConfigFileByProperty != null) {
-        errMsg = "Failed to find configuration file [" + autoConfigFileByProperty + "].";
-      } else {
-        errMsg = "Failed to find logback-audit configuration files  [" + AUTOCONFIG_FILE + "].";
-      }
-      throw new JournalException(errMsg);
-    }
-  }
-
-  private static void configureByResource(JournalFactory context, URL url) throws JournalException {
-    JoranConfiguration configurator = new JoranConfiguration();
-    configurator.setContext(context);
-
-    try {
-      configurator.doConfigure(url);
-    } catch (JoranException e) {
-      throw new JournalException("Configuration failure in " + url, e);
     }
   }
 
@@ -101,4 +62,29 @@ public class JournalFactory extends ContextBase implements LifeCycle {
     }
     journals.clear();
   }
+
+
+  public void write(Object record) throws JournalException {
+    checkStartFactory();
+    for (Journal journal : journals.values()) {
+      if (journal.getTClass().getName().equalsIgnoreCase(record.getClass().getName()))
+        journal.write(record);
+    }
+  }
+
+  public <T> Collection<T> read(Class<T> tClass) {
+    checkStartFactory();
+    return (Collection<T>) journals.values().stream()
+        .filter(j -> j.getTClass().getName().equalsIgnoreCase(tClass.getName()))
+        .flatMap(j -> j.<T>read().stream())
+        .collect(Collectors.toList());
+  }
+
+  public <T> Collection<T> read(String key) {
+    Journal journal = get(key);
+    if (journal == null)
+      return Collections.emptyList();
+    return journal.read();
+  }
+
 }

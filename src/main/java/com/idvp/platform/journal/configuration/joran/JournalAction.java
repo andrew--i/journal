@@ -3,12 +3,9 @@ package com.idvp.platform.journal.configuration.joran;
 import ch.qos.logback.core.joran.action.Action;
 import ch.qos.logback.core.joran.spi.ActionException;
 import ch.qos.logback.core.joran.spi.InterpretationContext;
-import ch.qos.logback.core.util.StatusPrinter;
 import com.idvp.platform.journal.Journal;
 import com.idvp.platform.journal.JournalFactory;
-import com.idvp.platform.journal.SourceFactory;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.vfs2.FileSystemException;
 import org.xml.sax.Attributes;
 
 public class JournalAction extends Action {

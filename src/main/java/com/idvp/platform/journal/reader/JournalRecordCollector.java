@@ -4,7 +4,11 @@ import com.idvp.platform.journal.JournalRecordTransformer;
 import com.idvp.platform.journal.reader.collector.LogDataCollector;
 import com.idvp.platform.journal.reader.model.LogData;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class JournalRecordCollector<T> implements LogDataCollector {
 
@@ -17,13 +21,6 @@ public class JournalRecordCollector<T> implements LogDataCollector {
     this.logDataCollector = logDataCollector;
   }
 
-  public Optional<T> getRecord() {
-    final LogData[] logData = logDataCollector.getLogData();
-    if (logData.length == 0)
-      return Optional.empty();
-    final LogData lastRecord = logData[logData.length - 1];
-    return journalRecordTransformer.fromString(lastRecord.getMessage());
-  }
 
   @Override
   public void add(LogData... logDatas) {
@@ -38,5 +35,15 @@ public class JournalRecordCollector<T> implements LogDataCollector {
   @Override
   public int clear() {
     return logDataCollector.clear();
+  }
+
+  public Collection<T> getRecords() {
+    final LogData[] logData = logDataCollector.getLogData();
+    List<T> records = Arrays.stream(logData)
+        .map(ld -> journalRecordTransformer.fromString(ld.getMessage()))
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .collect(Collectors.toList());
+    return records;
   }
 }

@@ -6,7 +6,7 @@ import ch.qos.logback.core.util.DynamicClassLoadingException;
 import ch.qos.logback.core.util.IncompatibleClassException;
 import ch.qos.logback.core.util.OptionHelper;
 import com.idvp.platform.journal.Journal;
-import com.idvp.platform.journal.SourceFactory;
+import com.idvp.platform.journal.reader.SourceFactory;
 import com.idvp.platform.journal.reader.JournalRecordsReader;
 import com.idvp.platform.journal.reader.collector.LogDataCollector;
 import com.idvp.platform.journal.reader.collector.TopLogDataCollector;
