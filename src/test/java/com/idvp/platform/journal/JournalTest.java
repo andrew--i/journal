@@ -1,6 +1,5 @@
 package com.idvp.platform.journal;
 
-import com.idvp.platform.journal.configuration.JournalFactoryConfigurator;
 import com.idvp.platform.journal.configuration.JournalProviderConfigurator;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class JournalTest extends JournalTestBase {
   @Test
   public void testJournalApi() throws Exception {
     System.setProperty(JournalProviderConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal/journal.config.xml");
-    Journal<String> journal = journalFactory.get("other_journal");
+    Journal<String> journal = journalProvider.get("other_journal");
     assertNotNull(journal);
     String message = "some record at " + System.currentTimeMillis();
     journal.write(message);

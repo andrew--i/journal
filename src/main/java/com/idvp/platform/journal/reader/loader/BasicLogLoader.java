@@ -5,7 +5,7 @@ import com.idvp.platform.journal.reader.importer.LogImporter;
 import com.idvp.platform.journal.reader.loading.LoadStatistic;
 import com.idvp.platform.journal.reader.loading.LoadingDetails;
 import com.idvp.platform.journal.reader.loading.LogLoadingSession;
-import com.idvp.platform.journal.reader.loading.Source;
+import com.idvp.platform.journal.reader.loading.VfsSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,12 +27,12 @@ public class BasicLogLoader implements LogLoader {
 
 
   @Override
-  public LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector) {
+  public LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector) {
     return startLoading(source, logImporter, logDataCollector, DEFAULT_SLEEP_TIME);
   }
 
   @Override
-  public LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime) {
+  public LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime) {
 
     final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, logDataCollector, sleepTime);
     final Thread thread = new Thread(loadingRunnable, source.stringForm());

@@ -38,7 +38,7 @@ public class JournalFolderTest extends JournalTestBase {
   @Test
   public void testJournalApi() throws Exception {
     System.setProperty(JournalProviderConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal_folder/journal.config.xml");
-    Journal<String> journal = journalFactory.get("string_journal");
+    Journal<String> journal = journalProvider.get("string_journal");
     assertNotNull(journal);
     String message = "some record at " + System.currentTimeMillis();
     journal.write(message);

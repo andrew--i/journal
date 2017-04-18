@@ -10,7 +10,7 @@ import com.idvp.platform.journal.reader.SourceFactory;
 import com.idvp.platform.journal.reader.JournalRecordsReader;
 import com.idvp.platform.journal.reader.collector.LogDataCollector;
 import com.idvp.platform.journal.reader.collector.TopLogDataCollector;
-import com.idvp.platform.journal.reader.loading.Source;
+import com.idvp.platform.journal.reader.loading.VfsSource;
 import org.apache.commons.vfs2.FileSystemException;
 import org.xml.sax.Attributes;
 
@@ -18,7 +18,7 @@ public class JournalReaderFactory {
 
 
   public static JournalRecordsReader create(String collectorClassName, String sourceValue, Context context, InterpretationContext ic, Attributes attributes) throws DynamicClassLoadingException, IncompatibleClassException, FileSystemException {
-    Source source = SourceFactory.create(sourceValue);
+    VfsSource source = SourceFactory.create(sourceValue);
     Journal journal = (Journal) ic.peekObject();
     if (collectorClassName.equalsIgnoreCase(TopLogDataCollector.class.getName()))
       return createTopLogDataCollector(source, journal, ic, attributes);
@@ -29,7 +29,7 @@ public class JournalReaderFactory {
 
   }
 
-  private static JournalRecordsReader createTopLogDataCollector(Source source, Journal journal, InterpretationContext ic, Attributes attributes) {
+  private static JournalRecordsReader createTopLogDataCollector(VfsSource source, Journal journal, InterpretationContext ic, Attributes attributes) {
     String topSize = ic.subst(attributes.getValue("topSize"));
     TopLogDataCollector topLogDataCollector = new TopLogDataCollector(Integer.parseInt(topSize));
     return new JournalRecordsReader(source, journal.getTClass(), topLogDataCollector);

@@ -26,13 +26,13 @@ public class JournalFactoryReadWriteTest extends JournalTestBase {
     System.setProperty(JournalProviderConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal/journal.config.xml");
 
     String message = "some record at " + System.currentTimeMillis();
-    journalFactory.write(message);
+    journalProvider.write(message);
 
-    Thread.sleep(1000);
+    Thread.sleep(2100);
 
-    final Collection<Object> r1 = journalFactory.read("other_journal");
+    final Collection<Object> r1 = journalProvider.read("other_journal");
     assertEquals(message, r1.iterator().next());
-    final Collection<String> r2 = journalFactory.read(String.class);
+    final Collection<String> r2 = journalProvider.read(String.class);
     assertEquals(message, r2.iterator().next());
   }
 }

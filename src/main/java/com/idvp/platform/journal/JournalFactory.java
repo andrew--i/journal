@@ -3,12 +3,11 @@ package com.idvp.platform.journal;
 import ch.qos.logback.core.ContextBase;
 import ch.qos.logback.core.spi.LifeCycle;
 import com.idvp.platform.journal.configuration.JournalFactoryConfigurator;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -22,11 +21,11 @@ public class JournalFactory extends ContextBase implements LifeCycle {
   private Map<String, Journal> journals = new ConcurrentHashMap<>();
 
   public JournalFactory(String config) {
-    try (InputStream inputStream = new ByteArrayInputStream(config.getBytes("UTF-8"))) {
-      new JournalFactoryConfigurator().configureByResourceStream(this, inputStream);
+
+    try (Reader reader = new StringReader(config)) {
+      new JournalFactoryConfigurator().configureByResourceStream(this, reader);
     } catch (IOException | JournalException e) {
       logger.error("Could not create journal factory", e);
-      e.printStackTrace();
     }
   }
 
@@ -41,23 +40,25 @@ public class JournalFactory extends ContextBase implements LifeCycle {
 
   @Override
   public void start() {
-    super.start();
     for (Journal journal : journals.values()) {
       journal.start();
     }
+    super.start();
   }
 
   @Override
   public void stop() {
-    super.stop();
     for (Journal journal : journals.values()) {
       journal.stop();
     }
     journals.clear();
+    super.stop();
   }
 
 
   public void write(Object record) throws JournalException {
+    if (!isStarted())
+      start();
     for (Journal journal : journals.values()) {
       if (journal.getTClass().getName().equalsIgnoreCase(record.getClass().getName()))
         journal.write(record);
@@ -65,7 +66,7 @@ public class JournalFactory extends ContextBase implements LifeCycle {
   }
 
   public <T> Collection<T> read(Class<T> tClass) {
-    if(!isStarted())
+    if (!isStarted())
       start();
 
     return (Collection<T>) journals.values().stream()
@@ -75,7 +76,7 @@ public class JournalFactory extends ContextBase implements LifeCycle {
   }
 
   public <T> Collection<T> read(String key) {
-    if(!isStarted())
+    if (!isStarted())
       start();
     Journal journal = get(key);
     if (journal == null)

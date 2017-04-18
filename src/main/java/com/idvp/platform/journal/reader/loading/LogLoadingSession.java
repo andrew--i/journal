@@ -10,7 +10,7 @@ public class LogLoadingSession {
   @Getter
   private String id;
   @Getter
-  private Source source;
+  private VfsSource source;
 
 
   @Override

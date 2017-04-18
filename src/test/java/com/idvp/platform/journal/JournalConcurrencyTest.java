@@ -13,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 
 public class JournalConcurrencyTest extends JournalTestBase {
 
-  private JournalFactory journalFactory1;
-  private JournalFactory journalFactory2;
+  private JournalProvider journalFactory1;
+  private JournalProvider journalFactory2;
   private String journalDir = getTestPathFor("JournalConcurrencyTest");
 
   @Override
@@ -53,8 +53,8 @@ public class JournalConcurrencyTest extends JournalTestBase {
 
   @Test
   public void testJournalApi() throws Exception {
-    journalFactory1 = new JournalFactory("journal_concurrency/journal_1.config.xml");
-    journalFactory2 = new JournalFactory("journal_concurrency/journal_2.config.xml");
+    journalFactory1 = new JournalProvider("journal_concurrency/journal_1.config.xml");
+    journalFactory2 = new JournalProvider("journal_concurrency/journal_2.config.xml");
 
     String message1 = "some record at " + System.currentTimeMillis();
     journalFactory1.write(message1);
@@ -63,7 +63,7 @@ public class JournalConcurrencyTest extends JournalTestBase {
 
 
 
-    Thread.sleep(2000);
+    Thread.sleep(2100);
 
     Collection<String> messages1 = journalFactory1.read(String.class);
     assertEquals(2, messages1.size());

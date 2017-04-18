@@ -6,21 +6,17 @@ import com.idvp.platform.journal.reader.io.LoadingInfo;
 import com.idvp.platform.journal.reader.io.ObservableInputStreamImpl;
 import com.idvp.platform.journal.reader.io.Utils;
 import com.idvp.platform.journal.reader.loading.LoadStatistic;
-import com.idvp.platform.journal.reader.loading.SocketSource;
-import com.idvp.platform.journal.reader.loading.Source;
 import com.idvp.platform.journal.reader.loading.VfsSource;
 import com.idvp.platform.journal.reader.parser.ParsingContext;
 import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.util.Optional;
 
 public class LoadingRunnable implements Runnable {
 
   private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(LoadingRunnable.class);
-  private final Source source;
+  private final VfsSource source;
   private LogDataCollector logDataCollector;
   private final long sleepTime;
 
@@ -32,7 +28,7 @@ public class LoadingRunnable implements Runnable {
 
   private enum SleepAction {Sleep, Break, Import}
 
-  public LoadingRunnable(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime) {
+  public LoadingRunnable(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime) {
     this.source = source;
     this.logDataCollector = logDataCollector;
     this.sleepTime = sleepTime;
@@ -42,53 +38,12 @@ public class LoadingRunnable implements Runnable {
   @Override
   public void run() {
     if (source instanceof VfsSource) {
-      runWithVfs((VfsSource) source);
-    } else if (source instanceof SocketSource) {
-      runWithSocket((SocketSource) source);
+      runWithVfs(source);
     } else {
       LOGGER.error("Not support source type: " + source);
     }
   }
 
-  private void runWithSocket(SocketSource source) {
-    final ParsingContext parsingContext = new ParsingContext("Socket", "Socket " + source.getSocket().getRemoteSocketAddress());
-    importer.initParsingContext(parsingContext);
-    try {
-      final InputStream inputStream = new BufferedInputStream(source.getSocket().getInputStream());
-      final ObservableInputStreamImpl observableInputStream = new ObservableInputStreamImpl(inputStream);
-
-      LOGGER.debug("Starting main loop");
-      while (parsingContext.isParsingInProgress()) {
-        try {
-          SleepAction action;
-          synchronized (this) {
-            if (stop) {
-              action = SleepAction.Break;
-            } else if (pause) {
-              action = SleepAction.Sleep;
-            } else {
-              action = SleepAction.Import;
-            }
-          }
-          if (SleepAction.Sleep == action) {
-            Thread.sleep(sleepTime);
-          } else if (SleepAction.Break == action) {
-            break;
-          } else {
-            importer.importLogs(observableInputStream, logDataCollector, parsingContext);
-          }
-
-          Thread.sleep(sleepTime);
-
-        } catch (Exception e) {
-          LOGGER.warn("Exception in tailing loop: " + e.getMessage());
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    LOGGER.info("Log importing finished");
-  }
 
   private void runWithVfs(VfsSource vfs) {
     try {
@@ -110,7 +65,7 @@ public class LoadingRunnable implements Runnable {
           SleepAction action;
           observableInputStream = Optional.of(loadingInfo.getObservableInputStreamImpl());
           synchronized (this) {
-            if (stop) {
+            if (stop || !loadingInfo.getFileObject().exists()) {
               action = SleepAction.Break;
             } else if (pause) {
               action = SleepAction.Sleep;

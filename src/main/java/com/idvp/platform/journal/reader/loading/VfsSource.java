@@ -3,7 +3,7 @@ package com.idvp.platform.journal.reader.loading;
 
 import org.apache.commons.vfs2.FileObject;
 
-public class VfsSource extends Source {
+public class VfsSource {
 
   private final FileObject fileObject;
   private final long position;
@@ -25,7 +25,6 @@ public class VfsSource extends Source {
     return position;
   }
 
-  @Override
   public String stringForm() {
     return fileObject.getName().getBaseName();
   }

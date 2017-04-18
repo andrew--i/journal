@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JournalProvider implements LifeCycle {
 
@@ -18,7 +19,7 @@ public class JournalProvider implements LifeCycle {
   private ConcurrentHashMap<String, JournalFactory> journalFactoryMap = new ConcurrentHashMap<>();
 
   private String configPath;
-  private boolean isStarted;
+  private volatile AtomicBoolean isStarted = new AtomicBoolean(false);
   private JournalDiscriminator journalDiscriminator;
   private String configContent;
 
@@ -40,7 +41,7 @@ public class JournalProvider implements LifeCycle {
       journalDiscriminator = configurator.createDiscriminator(this.configContent);
     } catch (JournalException e) {
       stop();
-      logger.error("Could not initialize journal factory");
+      logger.error("Could not initialize journal factory", e);
     }
   }
 
@@ -48,6 +49,7 @@ public class JournalProvider implements LifeCycle {
     if (!isStarted()) {
       lazyInit();
       start();
+
     }
   }
 
@@ -56,7 +58,7 @@ public class JournalProvider implements LifeCycle {
     if (journalDiscriminator != null)
       journalDiscriminator.stop();
     journalFactoryMap.values().forEach(JournalFactory::start);
-    isStarted = true;
+    isStarted.set(true);
   }
 
   @Override
@@ -66,7 +68,7 @@ public class JournalProvider implements LifeCycle {
 
   @Override
   public boolean isStarted() {
-    return isStarted;
+    return isStarted.get();
   }
 
   public <T> void write(T record) throws JournalException {

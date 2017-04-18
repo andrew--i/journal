@@ -14,7 +14,7 @@ import java.io.InputStream;
 
 public class JournalTestBase {
 
-  protected JournalProvider journalFactory;
+  protected JournalProvider journalProvider;
 
   protected String getJournalFile() {
     return "sample.file";
@@ -52,16 +52,17 @@ public class JournalTestBase {
     File journalPath = getJournalPath();
     journalPath.delete();
     System.setProperty("JOURNAL_FILE_PATH", journalPath.toString());
+    System.setProperty("JOURNAL_FILE", getJournalFile());
     configureLogging();
-    journalFactory = new JournalProvider();
+    journalProvider = new JournalProvider();
   }
 
   @After
   public void tearDown() throws Exception {
 
     //close journals and associated resources
-    if (journalFactory != null)
-      journalFactory.stop();
+    if (journalProvider != null)
+      journalProvider.stop();
 
     //close logback and associated resources
     LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();

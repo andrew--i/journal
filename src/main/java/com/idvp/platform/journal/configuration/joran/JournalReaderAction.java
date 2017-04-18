@@ -32,7 +32,7 @@ public class JournalReaderAction extends Action {
     }
 
     try {
-      addInfo("About to instantiate reader of type [" + collectorClassName + "]");
+      addInfo("About to instantiate collector of type [" + collectorClassName + "]");
       journalRecordsReader = JournalReaderFactory.create(collectorClassName, sourceValue, context, ic, attributes);
 
       String readerName = ic.subst(attributes.getValue(NAME_ATTRIBUTE));
@@ -66,12 +66,12 @@ public class JournalReaderAction extends Action {
               + journalRecordsReader.getName() + "] pushed earlier.");
     } else {
       addInfo(
-          "Popping appender named [" + journalRecordsReader.getName()
+          "Popping reader named [" + journalRecordsReader.getName()
               + "] from the object stack");
       ic.popObject();
     }
     addInfo(
-        "Setting journal's appender to appender named [" + journalRecordsReader.getName()
+        "Setting journal's reader to reader named [" + journalRecordsReader.getName()
             + "]");
 
     Journal journal = (Journal) ic.peekObject();

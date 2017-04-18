@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class LoadStatistic {
 
   @Getter
-  private Source source;
+  private VfsSource source;
   @Getter
   private long position;
   @Getter
@@ -15,7 +15,7 @@ public class LoadStatistic {
   @Getter
   private LocalDate date;
 
-  public LoadStatistic(Source source, long position, long total) {
+  public LoadStatistic(VfsSource source, long position, long total) {
     this.source = source;
     this.position = position;
     this.total = total;

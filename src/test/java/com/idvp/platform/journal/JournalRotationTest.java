@@ -41,17 +41,17 @@ public class JournalRotationTest extends JournalTestBase {
 
   @Test
   public void testJournalApi() throws Exception {
-    journalFactory.stop();
-    journalFactory= new JournalProvider("journal_rotation/journal.config.xml");
+    journalProvider.stop();
+    journalProvider = new JournalProvider("journal_rotation/journal.config.xml");
     String message = "some record at " + System.currentTimeMillis();
     for (int i = 0; i < 20; i++) {
-      journalFactory.write(message + "_" + i);
+      journalProvider.write(message + "_" + i);
       Thread.sleep(100);
     }
 
 
     Thread.sleep(4000);
-    final Collection<String> records = journalFactory.read(String.class);
+    final Collection<String> records = journalProvider.read(String.class);
     assertFalse(records.isEmpty());
     assertEquals(20, records.size());
 

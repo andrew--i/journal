@@ -6,13 +6,13 @@ import com.idvp.platform.journal.reader.importer.LogImporter;
 import com.idvp.platform.journal.reader.loading.LoadStatistic;
 import com.idvp.platform.journal.reader.loading.LoadingDetails;
 import com.idvp.platform.journal.reader.loading.LogLoadingSession;
-import com.idvp.platform.journal.reader.loading.Source;
+import com.idvp.platform.journal.reader.loading.VfsSource;
 
 public interface LogLoader {
 
-  LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector);
+  LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector);
 
-  LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime);
+  LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime);
 
   void pause(LogLoadingSession logLoadingSession);
 
