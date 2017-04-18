@@ -13,7 +13,7 @@ public class JournalFolderTest extends JournalTestBase {
 
   @Override
   protected String getJournalFile() {
-    return "target/tests/JournalFolderTest/JournalFolderTest.journal";
+    return "JournalFolderTest/JournalFolderTest.journal";
   }
 
   @Override
@@ -24,9 +24,15 @@ public class JournalFolderTest extends JournalTestBase {
   @Override
   public void setUp() throws Exception {
     super.setUp();
-    String journalDir = new File(".").getAbsolutePath() + File.separatorChar + "target/tests/JournalFolderTest";
-    new File(journalDir).delete();
+    String journalDir = getTestPathFor("JournalFolderTest");
     System.setProperty("JOURNAL_DIRECTORY_PATH", journalDir);
+  }
+
+  @Override
+  public void tearDown() throws Exception {
+    super.tearDown();
+    String journalDir = getTestPathFor("JournalFolderTest");
+    new File(journalDir).delete();
   }
 
   @Test

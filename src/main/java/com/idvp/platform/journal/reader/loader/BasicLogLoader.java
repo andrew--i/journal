@@ -9,7 +9,10 @@ import com.idvp.platform.journal.reader.loading.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -32,7 +35,7 @@ public class BasicLogLoader implements LogLoader {
   public LogLoadingSession startLoading(Source source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime) {
 
     final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, logDataCollector, sleepTime);
-    final Thread thread = new Thread(loadingRunnable);
+    final Thread thread = new Thread(loadingRunnable, source.stringForm());
     thread.setDaemon(true);
     thread.start();
     String id = UUID.randomUUID().toString(); //TODO replace this with something meaningful

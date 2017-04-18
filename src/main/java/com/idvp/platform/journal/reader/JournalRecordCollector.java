@@ -3,8 +3,6 @@ package com.idvp.platform.journal.reader;
 import com.idvp.platform.journal.JournalRecordTransformer;
 import com.idvp.platform.journal.reader.collector.LogDataCollector;
 import com.idvp.platform.journal.reader.model.LogData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,8 +11,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class JournalRecordCollector<T> implements LogDataCollector {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(JournalRecordCollector.class);
 
   private LogDataCollector logDataCollector;
 
@@ -28,7 +24,6 @@ public class JournalRecordCollector<T> implements LogDataCollector {
 
   @Override
   public synchronized void add(LogData... logDatas) {
-    LOGGER.info("Collector added log items: " + logDatas.length);
     logDataCollector.add(logDatas);
   }
 

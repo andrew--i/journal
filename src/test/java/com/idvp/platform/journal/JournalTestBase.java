@@ -3,6 +3,7 @@ package com.idvp.platform.journal;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
+import org.apache.commons.vfs2.VFS;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,17 @@ public class JournalTestBase {
 
 
   protected File getJournalPath() {
-    String filePath = new File(".").getAbsolutePath() + File.separatorChar + getJournalFile();
+    String filePath = getTestPathFor(getJournalFile());
     return new File(filePath);
   }
 
   protected String getLogbackConfigFile() {
     return null;
+  }
+
+  protected String getTestPathFor(String file) {
+    String filePath = new File(".").getAbsolutePath() + File.separatorChar + "target/tests/" + file;
+    return filePath;
   }
 
   private void configureLogging() throws IOException, JoranException {
@@ -52,7 +58,19 @@ public class JournalTestBase {
 
   @After
   public void tearDown() throws Exception {
-    journalFactory.stop();
+
+    //close journals and associated resources
+    if (journalFactory != null)
+      journalFactory.stop();
+
+    //close logback and associated resources
+    LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+    context.stop();
+
+    //close cache vfs and associated resources
+    VFS.getManager().getFilesCache().close();
+
+    //delete journal file
     if (getJournalPath().exists()) {
       boolean delete = getJournalPath().delete();
       if (!delete)

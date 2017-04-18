@@ -173,5 +173,6 @@ public class LoadingRunnable implements Runnable {
 
   public synchronized void stop() {
     stop = true;
+    observableInputStream.ifPresent(ObservableInputStreamImpl::stop);
   }
 }

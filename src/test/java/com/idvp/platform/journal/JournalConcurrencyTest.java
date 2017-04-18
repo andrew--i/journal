@@ -1,13 +1,13 @@
 package com.idvp.platform.journal;
 
-import org.awaitility.Duration;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Collection;
 
-import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -15,11 +15,11 @@ public class JournalConcurrencyTest extends JournalTestBase {
 
   private JournalFactory journalFactory1;
   private JournalFactory journalFactory2;
-  private String journalDir = new File(".").getAbsolutePath() + File.separatorChar + "target/tests/JournalConcurrencyTest";
+  private String journalDir = getTestPathFor("JournalConcurrencyTest");
 
   @Override
   protected String getJournalFile() {
-    return "target/tests/JournalConcurrencyTest/string_journal";
+    return "JournalConcurrencyTest/string_journal";
   }
 
   @Override
@@ -30,8 +30,10 @@ public class JournalConcurrencyTest extends JournalTestBase {
   @Override
   public void setUp() throws Exception {
     super.setUp();
-    ;
-    new File(journalDir).delete();
+    Thread.sleep(10000);
+    final File file = new File(journalDir);
+    if(file.exists())
+      FileUtils.deleteQuietly(file);
     System.setProperty("JOURNAL_DIRECTORY_PATH", journalDir);
 
 
@@ -39,9 +41,14 @@ public class JournalConcurrencyTest extends JournalTestBase {
 
   @After
   public void tearDown() throws Exception {
+    super.tearDown();
     journalFactory1.stop();
     journalFactory2.stop();
-    new File(journalDir).delete();
+    final File file = new File((journalDir));
+    for (File f : file.listFiles()) {
+      Files.delete(f.toPath());
+    }
+    Files.delete(file.toPath());
   }
 
   @Test
