@@ -1,0 +1,29 @@
+<configuration debug="true">
+
+	<appender name="journalSift" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<key>tenantId</key>
+			<defaultValue>unknown</defaultValue>
+		</discriminator>
+		<sift>
+			<appender name="journalFile-${tenantId}" class="ch.qos.logback.core.FileAppender">
+				<file>${JOURNAL_DIRECTORY_PATH}\${tenantId}\${JOURNAL_FILE}</file>
+				<append>true</append>
+				<encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+			</appender>
+		</sift>
+	</appender>
+
+
+	<logger name="journalLogger">
+		<appender-ref ref="journalSift"/>
+	</logger>
+
+	<root>
+		<appender name="console-info" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+			</encoder>
+		</appender>
+	</root>
+</configuration>

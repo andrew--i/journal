@@ -14,12 +14,4 @@
             <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
         </appender>
     </logger>
-
-    <root>
-        <appender name="console-info" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
-            </encoder>
-        </appender>
-    </root>
 </configuration>

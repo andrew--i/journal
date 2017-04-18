@@ -1,6 +1,7 @@
 package com.idvp.platform.journal;
 
 import com.idvp.platform.journal.configuration.JournalFactoryConfigurator;
+import com.idvp.platform.journal.configuration.JournalProviderConfigurator;
 import org.junit.Test;
 
 import static org.awaitility.Awaitility.await;
@@ -22,7 +23,7 @@ public class JournalTest extends JournalTestBase {
 
   @Test
   public void testJournalApi() throws Exception {
-    System.setProperty(JournalFactoryConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal/journal.config.xml");
+    System.setProperty(JournalProviderConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal/journal.config.xml");
     Journal<String> journal = journalFactory.get("other_journal");
     assertNotNull(journal);
     String message = "some record at " + System.currentTimeMillis();

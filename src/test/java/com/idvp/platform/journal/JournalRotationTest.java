@@ -1,7 +1,6 @@
 package com.idvp.platform.journal;
 
 import ch.qos.logback.core.joran.spi.JoranException;
-import com.idvp.platform.journal.configuration.JournalFactoryConfigurator;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
@@ -42,20 +41,21 @@ public class JournalRotationTest extends JournalTestBase {
 
   @Test
   public void testJournalApi() throws Exception {
-    System.setProperty(JournalFactoryConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal_rotation/journal.config.xml");
+    journalFactory.stop();
+    journalFactory= new JournalProvider("journal_rotation/journal.config.xml");
     String message = "some record at " + System.currentTimeMillis();
-    for (int i = 0; i < 60; i++) {
+    for (int i = 0; i < 20; i++) {
       journalFactory.write(message + "_" + i);
-      Thread.sleep(20);
+      Thread.sleep(100);
     }
 
 
-    Thread.sleep(2000);
+    Thread.sleep(4000);
     final Collection<String> records = journalFactory.read(String.class);
     assertFalse(records.isEmpty());
-    assertEquals(60, records.size());
+    assertEquals(20, records.size());
 
-    assertEquals(message + "_59", records.iterator().next());
+    assertEquals(message + "_19", records.iterator().next());
 
 
   }

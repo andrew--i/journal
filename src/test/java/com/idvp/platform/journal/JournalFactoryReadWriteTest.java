@@ -1,7 +1,9 @@
 package com.idvp.platform.journal;
 
-import com.idvp.platform.journal.configuration.JournalFactoryConfigurator;
+import com.idvp.platform.journal.configuration.JournalProviderConfigurator;
 import org.junit.Test;
+
+import java.util.Collection;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
@@ -21,14 +23,16 @@ public class JournalFactoryReadWriteTest extends JournalTestBase {
 
   @Test
   public void testJournalFactoryReadWrite() throws Exception {
-    System.setProperty(JournalFactoryConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal/journal.config.xml");
+    System.setProperty(JournalProviderConfigurator.AUTOCONFIG_FILE_PROPERTY, "journal/journal.config.xml");
 
     String message = "some record at " + System.currentTimeMillis();
     journalFactory.write(message);
 
-    await().until(() -> !journalFactory.read("other_journal").isEmpty());
+    Thread.sleep(1000);
 
-    assertEquals(message, journalFactory.read("other_journal").iterator().next());
-    assertEquals(message, journalFactory.read(String.class).iterator().next());
+    final Collection<Object> r1 = journalFactory.read("other_journal");
+    assertEquals(message, r1.iterator().next());
+    final Collection<String> r2 = journalFactory.read(String.class);
+    assertEquals(message, r2.iterator().next());
   }
 }

@@ -1,11 +1,12 @@
 package com.idvp.platform.journal;
 
+import ch.qos.logback.core.spi.LifeCycle;
 import com.idvp.platform.journal.appender.JournalAppender;
 import com.idvp.platform.journal.reader.JournalRecordsReader;
 
 import java.util.Collection;
 
-public class Journal<T> {
+public class Journal<T> implements LifeCycle {
 
   /**
    * Ключ журнала, уникальный в рамках всех журналов
@@ -22,6 +23,7 @@ public class Journal<T> {
   private JournalRecordsReader<T> journalRecordsReader;
 
   private JournalAppender<T> journalRecordAppender;
+  private boolean isStarted;
 
   public String getKey() {
     return key;
@@ -52,17 +54,34 @@ public class Journal<T> {
     this.tClass = tClass;
   }
 
-  public void close() {
-    journalRecordsReader.close();
-    journalRecordAppender.stop();
-  }
-
-
   public void write(T record) throws JournalException {
+    if (!isStarted)
+      start();
     journalRecordAppender.doAppend(record);
   }
 
   public Collection<T> read() {
+    if (!isStarted)
+      start();
     return this.journalRecordsReader.getJournalRecordCollector().getRecords();
+  }
+
+  @Override
+  public void start() {
+    journalRecordAppender.start();
+    journalRecordsReader.open();
+    isStarted = true;
+  }
+
+  @Override
+  public void stop() {
+    journalRecordAppender.stop();
+    journalRecordsReader.close();
+    isStarted = false;
+  }
+
+  @Override
+  public boolean isStarted() {
+    return isStarted;
   }
 }

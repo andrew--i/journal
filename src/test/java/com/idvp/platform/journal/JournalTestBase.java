@@ -14,7 +14,7 @@ import java.io.InputStream;
 
 public class JournalTestBase {
 
-  protected JournalFactory journalFactory;
+  protected JournalProvider journalFactory;
 
   protected String getJournalFile() {
     return "sample.file";
@@ -53,7 +53,7 @@ public class JournalTestBase {
     journalPath.delete();
     System.setProperty("JOURNAL_FILE_PATH", journalPath.toString());
     configureLogging();
-    journalFactory = new JournalFactory();
+    journalFactory = new JournalProvider();
   }
 
   @After
