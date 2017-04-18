@@ -35,7 +35,7 @@ public class JournalTestBase {
     return filePath;
   }
 
-  private void configureLogging() throws IOException, JoranException {
+  protected void configureLogging() throws IOException, JoranException {
     String logbackConfigFile = getLogbackConfigFile();
     if (logbackConfigFile != null)
       try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(logbackConfigFile)) {

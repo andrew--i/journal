@@ -1,0 +1,8 @@
+<journals debug="true">
+    <journal key="string_journal" class="java.lang.String">
+        <appender name="slf4j" class="com.idvp.platform.journal.appender.SLF4JJournalAppender" logger="journalLogger"/>
+        <reader name="r1" collector="com.idvp.platform.journal.reader.collector.TopLogDataCollector"
+                topSize="100"
+                source="${JOURNAL_DIRECTORY_PATH}"/>
+    </journal>
+</journals>

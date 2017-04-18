@@ -88,7 +88,8 @@ public class JournalRecordsReader<T> implements FileListener {
 
   @Override
   public synchronized void fileCreated(FileChangeEvent event) throws Exception {
-    startLoading(new VfsSource(event.getFile()));
+    if (event.getFile().getType() == FileType.FILE)
+      startLoading(new VfsSource(event.getFile()));
   }
 
   @Override
