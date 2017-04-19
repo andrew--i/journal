@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class BasicLogLoader implements LogLoader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BasicLogLoader.class);
-  public static final int DEFAULT_SLEEP_TIME = 2000;
+  public static final int DEFAULT_SLEEP_TIME = 1000;
 
 
   private final Map<LogLoadingSession, LoadingRunnable> lrMap = new ConcurrentHashMap<>();
@@ -44,7 +44,7 @@ public class BasicLogLoader implements LogLoader {
     final List<LogLoadingSession> sessionsForCollector = ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>());
     sessionsForCollector.add(session);
     ldCollectorToSession.put(logDataCollector, sessionsForCollector);
-    LOGGER.info("Started {} ", id);
+    LOGGER.info("Started {} for {}", id, source.stringForm());
     return session;
   }
 

@@ -30,6 +30,10 @@ public class JournalTestBase {
     return null;
   }
 
+  protected String getJournalConfigPath() {
+    return null;
+  }
+
   protected String getTestPathFor(String file) {
     String filePath = new File(".").getAbsolutePath() + File.separatorChar + "target/tests/" + file;
     return filePath;
@@ -54,7 +58,10 @@ public class JournalTestBase {
     System.setProperty("JOURNAL_FILE_PATH", journalPath.toString());
     System.setProperty("JOURNAL_FILE", getJournalFile());
     configureLogging();
-    journalProvider = new JournalProvider();
+    if (getJournalConfigPath() == null)
+      journalProvider = new JournalProvider();
+    else
+      journalProvider = new JournalProvider(getJournalConfigPath());
   }
 
   @After

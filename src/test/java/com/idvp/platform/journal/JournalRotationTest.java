@@ -30,6 +30,8 @@ public class JournalRotationTest extends JournalTestBase {
     super.configureLogging();
   }
 
+
+
   @Override
   public void tearDown() throws Exception {
     super.tearDown();
@@ -39,23 +41,27 @@ public class JournalRotationTest extends JournalTestBase {
     FileUtils.deleteDirectory(directory);
   }
 
+  @Override
+  protected String getJournalConfigPath() {
+    return "journal_rotation/journal.config.xml";
+  }
+
   @Test
   public void testJournalApi() throws Exception {
-    journalProvider.stop();
-    journalProvider = new JournalProvider("journal_rotation/journal.config.xml");
     String message = "some record at " + System.currentTimeMillis();
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 30; i++) {
       journalProvider.write(message + "_" + i);
-      Thread.sleep(100);
+      Thread.sleep(200);
     }
 
 
-    Thread.sleep(4000);
+    Thread.sleep(2000);
     final Collection<String> records = journalProvider.read(String.class);
     assertFalse(records.isEmpty());
+    // see journal.config.xml
     assertEquals(20, records.size());
 
-    assertEquals(message + "_19", records.iterator().next());
+    assertEquals(message + "_29", records.iterator().next());
 
 
   }
