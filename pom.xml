@@ -37,6 +37,13 @@
             <version>${vfs2.version}</version>
         </dependency>
 
+        <!--for  commons-vfs2 logging-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
