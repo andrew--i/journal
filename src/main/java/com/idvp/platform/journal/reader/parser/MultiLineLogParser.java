@@ -22,6 +22,6 @@ import java.text.ParseException;
 
 public interface MultiLineLogParser extends LogParser {
 
-  LogData parseBuffer(ParsingContext parsingContext) throws ParseException;
+    LogData parseBuffer(ParsingContext parsingContext) throws ParseException;
 
 }

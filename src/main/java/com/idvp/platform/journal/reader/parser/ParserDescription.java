@@ -22,7 +22,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class ParserDescription {
 
-  private String displayName;
-  private String charset;
-  private String file;
+    private String displayName;
+    private String charset;
+    private String file;
 }

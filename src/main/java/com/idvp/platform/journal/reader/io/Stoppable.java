@@ -17,5 +17,5 @@ package com.idvp.platform.journal.reader.io;
 
 public interface Stoppable {
 
-  void stop();
+    void stop();
 }

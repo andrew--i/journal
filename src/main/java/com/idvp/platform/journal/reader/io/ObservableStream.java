@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public interface ObservableStream {
 
-  long getCurrentRead();
+    long getCurrentRead();
 
-  long getMax() throws IOException;
+    long getMax() throws IOException;
 }

@@ -17,88 +17,87 @@ package com.idvp.platform.journal.reader.model;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.logging.Level;
 
 public class LogDataBuilder {
 
-  private final LogData ld;
+    private final LogData ld;
 
-  public LogDataBuilder() {
-    ld = new LogData();
-  }
+    public LogDataBuilder() {
+        ld = new LogData();
+    }
 
-  public LogData build() {
-    return ld;
-  }
+    public LogData build() {
+        return ld;
+    }
 
-  public LogDataBuilder withLineNumber(String lineNumber) {
-    ld.setLine(lineNumber);
-    return this;
-  }
+    public LogDataBuilder withLineNumber(String lineNumber) {
+        ld.setLine(lineNumber);
+        return this;
+    }
 
-  public LogDataBuilder withId(int id) {
-    ld.setId(id);
-    return this;
-  }
+    public LogDataBuilder withId(int id) {
+        ld.setId(id);
+        return this;
+    }
 
-  public LogDataBuilder withMessage(String message) {
-    ld.setMessage(message);
-    return this;
-  }
+    public LogDataBuilder withMessage(String message) {
+        ld.setMessage(message);
+        return this;
+    }
 
-  public LogDataBuilder withClass(String clazz) {
-    ld.setClazz(clazz);
-    return this;
-  }
+    public LogDataBuilder withClass(String clazz) {
+        ld.setClazz(clazz);
+        return this;
+    }
 
-  public LogDataBuilder withDate(LocalDateTime date) {
-    ld.setDate(date);
-    return this;
-  }
+    public LogDataBuilder withDate(LocalDateTime date) {
+        ld.setDate(date);
+        return this;
+    }
 
-  public LogDataBuilder withLevel(String level) {
-    ld.setLevel(level);
-    return this;
-  }
+    public LogDataBuilder withLevel(String level) {
+        ld.setLevel(level);
+        return this;
+    }
 
-  public LogDataBuilder withLoggerName(String loggerName) {
-    ld.setLoggerName(loggerName);
-    return this;
-  }
+    public LogDataBuilder withLoggerName(String loggerName) {
+        ld.setLoggerName(loggerName);
+        return this;
+    }
 
 
-  public LogDataBuilder withMessageId(String messageId) {
-    ld.setMessageId(messageId);
-    return this;
-  }
+    public LogDataBuilder withMessageId(String messageId) {
+        ld.setMessageId(messageId);
+        return this;
+    }
 
-  public LogDataBuilder withMethod(String method) {
-    ld.setMethod(method);
-    return this;
-  }
+    public LogDataBuilder withMethod(String method) {
+        ld.setMethod(method);
+        return this;
+    }
 
-  public LogDataBuilder withProperties(Map<String, String> properties) {
-    ld.setProperties(properties);
-    return this;
-  }
+    public LogDataBuilder withProperties(Map<String, String> properties) {
+        ld.setProperties(properties);
+        return this;
+    }
 
-  public LogDataBuilder withThread(String thread) {
-    ld.setThread(thread);
-    return this;
-  }
+    public LogDataBuilder withThread(String thread) {
+        ld.setThread(thread);
+        return this;
+    }
 
-  public LogDataBuilder withLogSource(String logSource) {
-    ld.setLogSource(logSource);
-    return this;
-  }
+    public LogDataBuilder withLogSource(String logSource) {
+        ld.setLogSource(logSource);
+        return this;
+    }
 
-  public LogDataBuilder withFile(String file) {
-    ld.setFile(file);
-    return this;
-  }
+    public LogDataBuilder withFile(String file) {
+        ld.setFile(file);
+        return this;
+    }
 
-  public LogDataBuilder withNdc(String ndc) {
-    ld.setNdc(ndc);
-    return this;
-  }
+    public LogDataBuilder withNdc(String ndc) {
+        ld.setNdc(ndc);
+        return this;
+    }
 }

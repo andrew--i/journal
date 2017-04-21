@@ -1,0 +1,26 @@
+<configuration debug="true">
+
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <appender name="hdfsAppender" class="com.idvp.platform.logback.appender.hdfs.HDFSAppender">
+        <filePath>webhdfs://localhost:50070</filePath>
+        <file>log_file</file>
+        <fileSuffix>.tjounral</fileSuffix>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="hdfsLogger">
+        <appender-ref ref="hdfsAppender"/>
+    </logger>
+
+    <root>
+        <appender-ref ref="console"/>
+    </root>
+</configuration>

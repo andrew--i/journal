@@ -16,7 +16,6 @@ package com.idvp.platform.journal.configuration.joran;
 
 
 import ch.qos.logback.core.joran.JoranConfiguratorBase;
-import ch.qos.logback.core.joran.action.ContextPropertyAction;
 import ch.qos.logback.core.joran.action.NestedBasicPropertyIA;
 import ch.qos.logback.core.joran.action.NestedComplexPropertyIA;
 import ch.qos.logback.core.joran.spi.ElementSelector;
@@ -26,24 +25,24 @@ import ch.qos.logback.core.joran.spi.RuleStore;
 
 public class JoranConfiguration extends JoranConfiguratorBase {
 
-  @Override
-  public void addInstanceRules(RuleStore rs) {
-    rs.addRule(new ElementSelector("journals"), new JournalFactoryAction());
-    rs.addRule(new ElementSelector("journals/journal"), new JournalAction());
-    rs.addRule(new ElementSelector("journals/journal/appender"), new JournalAppenderAction());
-    rs.addRule(new ElementSelector("journals/journal/reader"), new JournalReaderAction());
-  }
+    @Override
+    public void addInstanceRules(RuleStore rs) {
+        rs.addRule(new ElementSelector("journals"), new JournalFactoryAction());
+        rs.addRule(new ElementSelector("journals/journal"), new JournalAction());
+        rs.addRule(new ElementSelector("journals/journal/appender"), new JournalAppenderAction());
+        rs.addRule(new ElementSelector("journals/journal/reader"), new JournalReaderAction());
+    }
 
-  @Override
-  protected void addImplicitRules(Interpreter interpreter) {
-    // The following line adds the capability to parse nested components
-    NestedComplexPropertyIA nestedComplexPropertyIA = new NestedComplexPropertyIA(getBeanDescriptionCache());
-    nestedComplexPropertyIA.setContext(context);
-    interpreter.addImplicitAction(nestedComplexPropertyIA);
+    @Override
+    protected void addImplicitRules(Interpreter interpreter) {
+        // The following line adds the capability to parse nested components
+        NestedComplexPropertyIA nestedComplexPropertyIA = new NestedComplexPropertyIA(getBeanDescriptionCache());
+        nestedComplexPropertyIA.setContext(context);
+        interpreter.addImplicitAction(nestedComplexPropertyIA);
 
-    NestedBasicPropertyIA nestedBasicIA = new NestedBasicPropertyIA(getBeanDescriptionCache());
-    nestedBasicIA.setContext(context);
-    interpreter.addImplicitAction(nestedBasicIA);
-  }
+        NestedBasicPropertyIA nestedBasicIA = new NestedBasicPropertyIA(getBeanDescriptionCache());
+        nestedBasicIA.setContext(context);
+        interpreter.addImplicitAction(nestedBasicIA);
+    }
 
 }

@@ -18,105 +18,103 @@ import java.util.stream.Collectors;
 
 public class BasicLogLoader implements LogLoader {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(BasicLogLoader.class);
-  public static final int DEFAULT_SLEEP_TIME = 1000;
+    public static final int DEFAULT_SLEEP_TIME = 1000;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BasicLogLoader.class);
+    private final Map<LogLoadingSession, LoadingRunnable> lrMap = new ConcurrentHashMap<>();
+    private final Map<LogDataCollector, List<LogLoadingSession>> ldCollectorToSession = new ConcurrentHashMap<>();
 
 
-  private final Map<LogLoadingSession, LoadingRunnable> lrMap = new ConcurrentHashMap<>();
-  private final Map<LogDataCollector, List<LogLoadingSession>> ldCollectorToSession = new ConcurrentHashMap<>();
-
-
-  @Override
-  public LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector) {
-    return startLoading(source, logImporter, logDataCollector, DEFAULT_SLEEP_TIME);
-  }
-
-  @Override
-  public LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime) {
-
-    final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, logDataCollector, sleepTime);
-    final Thread thread = new Thread(loadingRunnable, source.stringForm());
-    thread.setDaemon(true);
-    thread.start();
-    String id = UUID.randomUUID().toString(); //TODO replace this with something meaningful
-    LogLoadingSession session = new LogLoadingSession(id, source);
-    lrMap.put(session, loadingRunnable);
-    final List<LogLoadingSession> sessionsForCollector = ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>());
-    sessionsForCollector.add(session);
-    ldCollectorToSession.put(logDataCollector, sessionsForCollector);
-    LOGGER.info("Started {} for {}", id, source.stringForm());
-    return session;
-  }
-
-  @Override
-  public void pause(LogLoadingSession logLoadingSession) {
-    if (lrMap.containsKey(logLoadingSession)) {
-      LOGGER.info("Pausing {} ", logLoadingSession);
-      final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
-      loadingRunnable.pause();
-    } else {
-      LOGGER.info("Pausing {} will not work, don't have this loading session", logLoadingSession);
+    @Override
+    public LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector) {
+        return startLoading(source, logImporter, logDataCollector, DEFAULT_SLEEP_TIME);
     }
-  }
 
-  @Override
-  public void resume(LogLoadingSession logLoadingSession) {
-    if (lrMap.containsKey(logLoadingSession)) {
-      LOGGER.info("Resuming {} ", logLoadingSession.getId());
-      final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
-      loadingRunnable.resume();
-    } else {
-      final String map = lrMap.entrySet().stream().map(es -> es.getKey() + "/" + es.getValue()).collect(Collectors.joining());
-      LOGGER.info("Resuming {} will not work, don't have this loading session, all:\n{}", logLoadingSession.getId(), map);
+    @Override
+    public LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime) {
+
+        final LoadingRunnable loadingRunnable = new LoadingRunnable(source, logImporter, logDataCollector, sleepTime);
+        final Thread thread = new Thread(loadingRunnable, source.stringForm());
+        thread.setDaemon(true);
+        thread.start();
+        String id = UUID.randomUUID().toString(); //TODO replace this with something meaningful
+        LogLoadingSession session = new LogLoadingSession(id, source);
+        lrMap.put(session, loadingRunnable);
+        final List<LogLoadingSession> sessionsForCollector = ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>());
+        sessionsForCollector.add(session);
+        ldCollectorToSession.put(logDataCollector, sessionsForCollector);
+        LOGGER.info("Started {} for {}", id, source.stringForm());
+        return session;
     }
-  }
 
-  @Override
-  public void stop(LogLoadingSession logLoadingSession) {
-    if (lrMap.containsKey(logLoadingSession)) {
-      LOGGER.info("Stopping {} ", logLoadingSession);
-      final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
-      loadingRunnable.stop();
+    @Override
+    public void pause(LogLoadingSession logLoadingSession) {
+        if (lrMap.containsKey(logLoadingSession)) {
+            LOGGER.info("Pausing {} ", logLoadingSession);
+            final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
+            loadingRunnable.pause();
+        } else {
+            LOGGER.info("Pausing {} will not work, don't have this loading session", logLoadingSession);
+        }
     }
-  }
 
-  @Override
-  public void close(LogLoadingSession logLoadingSession) {
-    lrMap.computeIfPresent(logLoadingSession, (id, loadingRunnable) -> {
-      LOGGER.info("Closing {} ", id);
-      loadingRunnable.stop();
+    @Override
+    public void resume(LogLoadingSession logLoadingSession) {
+        if (lrMap.containsKey(logLoadingSession)) {
+            LOGGER.info("Resuming {} ", logLoadingSession.getId());
+            final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
+            loadingRunnable.resume();
+        } else {
+            final String map = lrMap.entrySet().stream().map(es -> es.getKey() + "/" + es.getValue()).collect(Collectors.joining());
+            LOGGER.info("Resuming {} will not work, don't have this loading session, all:\n{}", logLoadingSession.getId(), map);
+        }
+    }
 
-      return loadingRunnable;
-    });
-  }
+    @Override
+    public void stop(LogLoadingSession logLoadingSession) {
+        if (lrMap.containsKey(logLoadingSession)) {
+            LOGGER.info("Stopping {} ", logLoadingSession);
+            final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
+            loadingRunnable.stop();
+        }
+    }
 
-  @Override
-  public void close(LogDataCollector logDataCollector) {
-    LOGGER.info("Closing {} should stop runnable!", logDataCollector);
-    ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>())
-        .stream()
-        .forEach(this::stop);
-    logDataCollector.clear();
+    @Override
+    public void close(LogLoadingSession logLoadingSession) {
+        lrMap.computeIfPresent(logLoadingSession, (id, loadingRunnable) -> {
+            LOGGER.info("Closing {} ", id);
+            loadingRunnable.stop();
 
-  }
+            return loadingRunnable;
+        });
+    }
+
+    @Override
+    public void close(LogDataCollector logDataCollector) {
+        LOGGER.info("Closing {} should stop runnable!", logDataCollector);
+        ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>())
+                .stream()
+                .forEach(this::stop);
+        logDataCollector.clear();
+
+    }
 
 
-  @Override
-  public LoadStatistic getLoadStatistic(LogLoadingSession logLoadingSession) {
-    final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
-    return loadingRunnable.getLoadStatistic();
-  }
+    @Override
+    public LoadStatistic getLoadStatistic(LogLoadingSession logLoadingSession) {
+        final LoadingRunnable loadingRunnable = lrMap.get(logLoadingSession);
+        return loadingRunnable.getLoadStatistic();
+    }
 
-  @Override
-  public LoadingDetails getLoadingDetails(LogDataCollector logDataCollector) {
-    List<LogLoadingSession> logLoadingSessions = ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>());
-    return new LoadingDetails(logLoadingSessions, logDataCollector);
-  }
+    @Override
+    public LoadingDetails getLoadingDetails(LogDataCollector logDataCollector) {
+        List<LogLoadingSession> logLoadingSessions = ldCollectorToSession.getOrDefault(logDataCollector, new ArrayList<>());
+        return new LoadingDetails(logLoadingSessions, logDataCollector);
+    }
 
-  @Override
-  public void shutdown() {
-    LOGGER.info("Shutting down");
-    lrMap.values().stream().forEach(LoadingRunnable::stop);
-    lrMap.clear();
-  }
+    @Override
+    public void shutdown() {
+        LOGGER.info("Shutting down");
+        lrMap.values().stream().forEach(LoadingRunnable::stop);
+        lrMap.clear();
+    }
 }

@@ -14,116 +14,116 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class JournalProvider implements LifeCycle {
 
 
-  private static Logger logger = LoggerFactory.getLogger(JournalProvider.class);
+    private static Logger logger = LoggerFactory.getLogger(JournalProvider.class);
 
-  private ConcurrentHashMap<String, JournalFactory> journalFactoryMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, JournalFactory> journalFactoryMap = new ConcurrentHashMap<>();
 
-  private String configPath;
-  private volatile AtomicBoolean isStarted = new AtomicBoolean(false);
-  private JournalDiscriminator journalDiscriminator;
-  private String configContent;
+    private String configPath;
+    private volatile AtomicBoolean isStarted = new AtomicBoolean(false);
+    private JournalDiscriminator journalDiscriminator;
+    private String configContent;
 
-  public JournalProvider() {
-  }
-
-  public JournalProvider(String configPath) {
-    this.configPath = configPath;
-  }
-
-  public void lazyInit() {
-    try {
-      JournalProviderConfigurator configurator = new JournalProviderConfigurator();
-      if (configPath == null) {
-        this.configContent = configurator.autoConfig(Loader.getTCL());
-      } else {
-        this.configContent = configurator.configByPath(configPath, Loader.getTCL());
-      }
-      journalDiscriminator = configurator.createDiscriminator(this.configContent);
-    } catch (JournalException e) {
-      stop();
-      logger.error("Could not initialize journal factory", e);
+    public JournalProvider() {
     }
-  }
 
-  private synchronized void checkStartProvider() {
-    if (!isStarted()) {
-      lazyInit();
-      start();
-
+    public JournalProvider(String configPath) {
+        this.configPath = configPath;
     }
-  }
 
-  @Override
-  public void start() {
-    if (journalDiscriminator != null)
-      journalDiscriminator.stop();
-    journalFactoryMap.values().forEach(JournalFactory::start);
-    isStarted.set(true);
-  }
+    public void lazyInit() {
+        try {
+            JournalProviderConfigurator configurator = new JournalProviderConfigurator();
+            if (configPath == null) {
+                this.configContent = configurator.autoConfig(Loader.getTCL());
+            } else {
+                this.configContent = configurator.configByPath(configPath, Loader.getTCL());
+            }
+            journalDiscriminator = configurator.createDiscriminator(this.configContent);
+        } catch (JournalException e) {
+            stop();
+            logger.error("Could not initialize journal factory", e);
+        }
+    }
 
-  @Override
-  public void stop() {
-    journalFactoryMap.values().forEach(JournalFactory::stop);
-  }
+    private synchronized void checkStartProvider() {
+        if (!isStarted()) {
+            lazyInit();
+            start();
 
-  @Override
-  public boolean isStarted() {
-    return isStarted.get();
-  }
+        }
+    }
 
-  public <T> void write(T record) throws JournalException {
-    checkStartProvider();
-    JournalFactory journalFactory = getOrCreateJournalFactoryByRecord(record);
-    journalFactory.write(record);
-  }
+    @Override
+    public void start() {
+        if (journalDiscriminator != null)
+            journalDiscriminator.stop();
+        journalFactoryMap.values().forEach(JournalFactory::start);
+        isStarted.set(true);
+    }
 
+    @Override
+    public void stop() {
+        journalFactoryMap.values().forEach(JournalFactory::stop);
+    }
 
-  public <T> Collection<T> read(Class<T> tClass) {
-    checkStartProvider();
-    JournalFactory journalFactory = getOrCreateJournalFactoryByClass(tClass);
-    return journalFactory.read(tClass);
-  }
+    @Override
+    public boolean isStarted() {
+        return isStarted.get();
+    }
 
-  public <T> Collection<T> read(String key) {
-    checkStartProvider();
-    JournalFactory journalFactory = getOrCreateJournalFactoryByKey(key);
-    return journalFactory.read(key);
-  }
-
-
-  public <T> Journal<T> get(String journalKey) {
-    checkStartProvider();
-    final JournalFactory journalFactory = getOrCreateJournalFactoryByKey(journalKey);
-    return journalFactory.get(journalKey);
-  }
-
-
-  private JournalFactory getOrCreateJournalFactoryByRecord(Object record) {
-    final String value = journalDiscriminator.getJournalDiscriminatingValueByRecord(record);
-    if (journalFactoryMap.containsKey(value))
-      return journalFactoryMap.get(value);
-    return createJournalFactory(journalDiscriminator.getKey(), value);
-  }
-
-  private JournalFactory getOrCreateJournalFactoryByClass(Class<?> tClass) {
-    final String value = journalDiscriminator.getJournalDiscriminatingValueByClass(tClass);
-    if (journalFactoryMap.containsKey(value))
-      return journalFactoryMap.get(value);
-    return createJournalFactory(journalDiscriminator.getKey(), value);
-  }
-
-  private JournalFactory getOrCreateJournalFactoryByKey(String key) {
-    final String journalDiscriminatorKey = journalDiscriminator.getJournalDiscriminatingValueByJournalKey(key);
-    if (journalFactoryMap.containsKey(journalDiscriminatorKey))
-      return journalFactoryMap.get(journalDiscriminatorKey);
-    return createJournalFactory(journalDiscriminator.getKey(), journalDiscriminatorKey);
-  }
+    public <T> void write(T record) throws JournalException {
+        checkStartProvider();
+        JournalFactory journalFactory = getOrCreateJournalFactoryByRecord(record);
+        journalFactory.write(record);
+    }
 
 
-  private JournalFactory createJournalFactory(String discriminatorKey, String discriminatorValue) {
-    final String journalFactoryConfig = configContent.replace("${" + discriminatorKey + "}", discriminatorValue);
-    final JournalFactory journalFactory = new JournalFactory(journalFactoryConfig);
-    journalFactoryMap.put(discriminatorValue, journalFactory);
-    return journalFactory;
-  }
+    public <T> Collection<T> read(Class<T> tClass) {
+        checkStartProvider();
+        JournalFactory journalFactory = getOrCreateJournalFactoryByClass(tClass);
+        return journalFactory.read(tClass);
+    }
+
+    public <T> Collection<T> read(String key) {
+        checkStartProvider();
+        JournalFactory journalFactory = getOrCreateJournalFactoryByKey(key);
+        return journalFactory.read(key);
+    }
+
+
+    public <T> Journal<T> get(String journalKey) {
+        checkStartProvider();
+        final JournalFactory journalFactory = getOrCreateJournalFactoryByKey(journalKey);
+        return journalFactory.get(journalKey);
+    }
+
+
+    private JournalFactory getOrCreateJournalFactoryByRecord(Object record) {
+        final String value = journalDiscriminator.getJournalDiscriminatingValueByRecord(record);
+        if (journalFactoryMap.containsKey(value))
+            return journalFactoryMap.get(value);
+        return createJournalFactory(journalDiscriminator.getKey(), value);
+    }
+
+    private JournalFactory getOrCreateJournalFactoryByClass(Class<?> tClass) {
+        final String value = journalDiscriminator.getJournalDiscriminatingValueByClass(tClass);
+        if (journalFactoryMap.containsKey(value))
+            return journalFactoryMap.get(value);
+        return createJournalFactory(journalDiscriminator.getKey(), value);
+    }
+
+    private JournalFactory getOrCreateJournalFactoryByKey(String key) {
+        final String journalDiscriminatorKey = journalDiscriminator.getJournalDiscriminatingValueByJournalKey(key);
+        if (journalFactoryMap.containsKey(journalDiscriminatorKey))
+            return journalFactoryMap.get(journalDiscriminatorKey);
+        return createJournalFactory(journalDiscriminator.getKey(), journalDiscriminatorKey);
+    }
+
+
+    private JournalFactory createJournalFactory(String discriminatorKey, String discriminatorValue) {
+        final String journalFactoryConfig = configContent.replace("${" + discriminatorKey + "}", discriminatorValue);
+        final JournalFactory journalFactory = new JournalFactory(journalFactoryConfig);
+        journalFactoryMap.put(discriminatorValue, journalFactory);
+        return journalFactory;
+    }
 }

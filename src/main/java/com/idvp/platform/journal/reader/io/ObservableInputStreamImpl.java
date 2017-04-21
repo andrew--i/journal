@@ -20,97 +20,97 @@ import java.io.InputStream;
 
 public class ObservableInputStreamImpl extends InputStream implements ObservableStream, Stoppable {
 
-  private final InputStream src;
-  private long current;
-  private volatile boolean stop = false;
+    private final InputStream src;
+    private long current;
+    private volatile boolean stop = false;
 
-  public ObservableInputStreamImpl(InputStream src) {
-    this(src, 0);
-  }
-
-  public ObservableInputStreamImpl(final InputStream src, final long current) {
-    super();
-    this.src = src;
-    this.current = current;
-  }
-
-  @Override
-  public int read() throws IOException {
-    current++;
-    return src.read();
-  }
-
-  public int available() throws IOException {
-    return src.available();
-  }
-
-  public void close() throws IOException {
-    stop();
-    super.close();
-    src.close();
-  }
-
-  public void mark(int readlimit) {
-    src.mark(readlimit);
-  }
-
-  public boolean markSupported() {
-    return src.markSupported();
-  }
-
-  public int read(byte[] b, int off, int len) throws IOException {
-    if (stop)
-      return -1;
-    int read = src.read(b, off, len);
-    if (read > 0) {
-      current += read;
+    public ObservableInputStreamImpl(InputStream src) {
+        this(src, 0);
     }
-    return read;
-  }
 
-  public int read(byte[] b) throws IOException {
-    if (stop)
-      return -1;
-    int read = src.read(b);
-    if (read > 0) {
-      current += read;
+    public ObservableInputStreamImpl(final InputStream src, final long current) {
+        super();
+        this.src = src;
+        this.current = current;
     }
-    return read;
-  }
 
-  public void reset() throws IOException {
-    src.reset();
-  }
-
-  public long skip(long n) throws IOException {
-    final long skip = src.skip(n);
-    return skip;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see pl.otros.logview.importer.ni.ObservableStream#getCurrentRead()
-   */
-  public long getCurrentRead() {
-    return current;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see pl.otros.logview.importer.ni.ObservableStream#getMax()
-   */
-  public long getMax() throws IOException {
-    return current + src.available();
-  }
-
-  @Override
-  public void stop() {
-    stop = true;
-    if (src instanceof Stoppable) {
-      ((Stoppable) src).stop();
+    @Override
+    public int read() throws IOException {
+        current++;
+        return src.read();
     }
-  }
+
+    public int available() throws IOException {
+        return src.available();
+    }
+
+    public void close() throws IOException {
+        stop();
+        super.close();
+        src.close();
+    }
+
+    public void mark(int readlimit) {
+        src.mark(readlimit);
+    }
+
+    public boolean markSupported() {
+        return src.markSupported();
+    }
+
+    public int read(byte[] b, int off, int len) throws IOException {
+        if (stop)
+            return -1;
+        int read = src.read(b, off, len);
+        if (read > 0) {
+            current += read;
+        }
+        return read;
+    }
+
+    public int read(byte[] b) throws IOException {
+        if (stop)
+            return -1;
+        int read = src.read(b);
+        if (read > 0) {
+            current += read;
+        }
+        return read;
+    }
+
+    public void reset() throws IOException {
+        src.reset();
+    }
+
+    public long skip(long n) throws IOException {
+        final long skip = src.skip(n);
+        return skip;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see pl.otros.logview.importer.ni.ObservableStream#getCurrentRead()
+     */
+    public long getCurrentRead() {
+        return current;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see pl.otros.logview.importer.ni.ObservableStream#getMax()
+     */
+    public long getMax() throws IOException {
+        return current + src.available();
+    }
+
+    @Override
+    public void stop() {
+        stop = true;
+        if (src instanceof Stoppable) {
+            ((Stoppable) src).stop();
+        }
+    }
 
 }

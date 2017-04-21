@@ -11,14 +11,14 @@ import java.io.Reader;
 public class JournalFactoryConfigurator {
 
 
-  public void configureByResourceStream(JournalFactory context, Reader reader) throws JournalException {
-    JoranConfiguration configurator = new JoranConfiguration();
-    configurator.setContext(context);
-    try {
-      configurator.doConfigure(new InputSource(reader));
-    } catch (JoranException e) {
-      throw new JournalException("Configuration failure ", e);
+    public void configureByResourceStream(JournalFactory context, Reader reader) throws JournalException {
+        JoranConfiguration configurator = new JoranConfiguration();
+        configurator.setContext(context);
+        try {
+            configurator.doConfigure(new InputSource(reader));
+        } catch (JoranException e) {
+            throw new JournalException("Configuration failure ", e);
+        }
     }
-  }
 
 }

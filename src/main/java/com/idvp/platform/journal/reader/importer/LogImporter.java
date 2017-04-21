@@ -24,14 +24,14 @@ import java.util.Properties;
 
 public interface LogImporter {
 
-  void init(Properties properties);
+    void init(Properties properties);
 
-  /**
-   * Initialize parsing context specific resources, which are not thread safe (i.e. DateFormat)
-   *
-   * @param parsingContext
-   */
-  void initParsingContext(ParsingContext parsingContext);
+    /**
+     * Initialize parsing context specific resources, which are not thread safe (i.e. DateFormat)
+     *
+     * @param parsingContext
+     */
+    void initParsingContext(ParsingContext parsingContext);
 
-  void importLogs(InputStream in, LogDataCollector dataCollector, ParsingContext parsingContext);
+    void importLogs(InputStream in, LogDataCollector dataCollector, ParsingContext parsingContext);
 }

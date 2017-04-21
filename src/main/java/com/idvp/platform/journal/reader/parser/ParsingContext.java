@@ -23,32 +23,32 @@ import java.util.HashMap;
 @Data
 public class ParsingContext {
 
-  private StringBuilder unmatchedLog;
-  private long lastParsed = 0;
-  private int generatedId = 0;
-  private volatile boolean parsingInProgress = true;
-  private String name;
-  private String logSource;
-  private HashMap<String, Object> customContextProperties;
-  private DateFormat dateFormat;
+    private StringBuilder unmatchedLog;
+    private long lastParsed = 0;
+    private int generatedId = 0;
+    private volatile boolean parsingInProgress = true;
+    private String name;
+    private String logSource;
+    private HashMap<String, Object> customContextProperties;
+    private DateFormat dateFormat;
 
-  public ParsingContext() {
-    this("?");
-  }
+    public ParsingContext() {
+        this("?");
+    }
 
-  public ParsingContext(String name) {
-    this(name, null);
-  }
+    public ParsingContext(String name) {
+        this(name, null);
+    }
 
-  public ParsingContext(String name, String logSource) {
-    this.name = name;
-    this.logSource = logSource;
-    unmatchedLog = new StringBuilder();
-    customContextProperties = new HashMap<>();
-  }
+    public ParsingContext(String name, String logSource) {
+        this.name = name;
+        this.logSource = logSource;
+        unmatchedLog = new StringBuilder();
+        customContextProperties = new HashMap<>();
+    }
 
-  public int getGeneratedIdAndIncrease() {
-    return generatedId++;
-  }
+    public int getGeneratedIdAndIncrease() {
+        return generatedId++;
+    }
 
 }

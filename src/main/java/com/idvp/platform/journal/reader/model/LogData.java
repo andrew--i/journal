@@ -27,43 +27,43 @@ import java.util.Map;
 @Data
 public class LogData implements Serializable {
 
-  private static final long serialVersionUID = -2896759475612130817L;
-  private LocalDateTime date = LocalDateTime.now();
-  private String level = Level.INFO.name();
-  private String messageId = "";
-  private String clazz = "";
-  private String method = "";
-  private String file = "";
-  private String line = "";
-  private String ndc = "";
-  private String thread = "";
-  private String loggerName = "";
-  private String message = "";
-  private int id;
-  private Map<String, String> properties;
-  private String logSource;
+    private static final long serialVersionUID = -2896759475612130817L;
+    private LocalDateTime date = LocalDateTime.now();
+    private String level = Level.INFO.name();
+    private String messageId = "";
+    private String clazz = "";
+    private String method = "";
+    private String file = "";
+    private String line = "";
+    private String ndc = "";
+    private String thread = "";
+    private String loggerName = "";
+    private String message = "";
+    private int id;
+    private Map<String, String> properties;
+    private String logSource;
 
-  @Override
-  public String toString() {
-    final int maxLen = 10;
-    String builder = "LogData [date=" + date + ", level=" + level + ", messageId=" + messageId + ", clazz=" + clazz +
-        ", method=" + method + ", file=" + file + ", line=" + line + ", ndc=" + ndc + ", thread=" +
-        thread + ", loggerName=" + loggerName + ", message=" + message + ", id=" + id + ", properties=" +
-        (properties != null ? toString(properties.entrySet(), maxLen) : null) + ", logSource=" + logSource + "]";
-    return builder;
-  }
-
-  private String toString(Collection<?> collection, int maxLen) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("[");
-    int i = 0;
-    for (Iterator<?> iterator = collection.iterator(); iterator.hasNext() && i < maxLen; i++) {
-      if (i > 0)
-        builder.append(", ");
-      builder.append(iterator.next());
+    @Override
+    public String toString() {
+        final int maxLen = 10;
+        String builder = "LogData [date=" + date + ", level=" + level + ", messageId=" + messageId + ", clazz=" + clazz +
+                ", method=" + method + ", file=" + file + ", line=" + line + ", ndc=" + ndc + ", thread=" +
+                thread + ", loggerName=" + loggerName + ", message=" + message + ", id=" + id + ", properties=" +
+                (properties != null ? toString(properties.entrySet(), maxLen) : null) + ", logSource=" + logSource + "]";
+        return builder;
     }
-    builder.append("]");
-    return builder.toString();
-  }
+
+    private String toString(Collection<?> collection, int maxLen) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        int i = 0;
+        for (Iterator<?> iterator = collection.iterator(); iterator.hasNext() && i < maxLen; i++) {
+            if (i > 0)
+                builder.append(", ");
+            builder.append(iterator.next());
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 
 }

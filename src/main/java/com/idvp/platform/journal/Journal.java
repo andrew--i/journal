@@ -8,80 +8,80 @@ import java.util.Collection;
 
 public class Journal<T> implements LifeCycle {
 
-  /**
-   * Ключ журнала, уникальный в рамках всех журналов
-   */
-  private String key;
-  /**
-   * Класс записи журнала
-   */
-  private Class<T> tClass;
+    /**
+     * Ключ журнала, уникальный в рамках всех журналов
+     */
+    private String key;
+    /**
+     * Класс записи журнала
+     */
+    private Class<T> tClass;
 
-  /**
-   * Загрузчик записей журнала
-   */
-  private JournalRecordsReader<T> journalRecordsReader;
+    /**
+     * Загрузчик записей журнала
+     */
+    private JournalRecordsReader<T> journalRecordsReader;
 
-  private JournalAppender<T> journalRecordAppender;
-  private boolean isStarted;
+    private JournalAppender<T> journalRecordAppender;
+    private boolean isStarted;
 
-  public String getKey() {
-    return key;
-  }
+    public Journal(String key, Class<T> tClass) {
+        this.key = key;
+        this.tClass = tClass;
+    }
 
-  public Class<T> getTClass() {
-    return tClass;
-  }
+    public String getKey() {
+        return key;
+    }
 
-  public JournalAppender<T> getJournalRecordAppender() {
-    return journalRecordAppender;
-  }
+    public Class<T> getTClass() {
+        return tClass;
+    }
 
-  public void setJournalRecordAppender(JournalAppender journalRecordAppender) {
-    this.journalRecordAppender = journalRecordAppender;
-  }
+    public JournalAppender<T> getJournalRecordAppender() {
+        return journalRecordAppender;
+    }
 
-  public void setJournalRecordsReader(JournalRecordsReader<T> journalRecordsReader) {
-    this.journalRecordsReader = journalRecordsReader;
-  }
+    public void setJournalRecordAppender(JournalAppender journalRecordAppender) {
+        this.journalRecordAppender = journalRecordAppender;
+    }
 
-  public JournalRecordsReader<T> getJournalRecordsReader() {
-    return journalRecordsReader;
-  }
+    public JournalRecordsReader<T> getJournalRecordsReader() {
+        return journalRecordsReader;
+    }
 
-  public Journal(String key, Class<T> tClass) {
-    this.key = key;
-    this.tClass = tClass;
-  }
+    public void setJournalRecordsReader(JournalRecordsReader<T> journalRecordsReader) {
+        this.journalRecordsReader = journalRecordsReader;
+    }
 
-  public void write(T record) throws JournalException {
-    if (!isStarted)
-      start();
-    journalRecordAppender.doAppend(record);
-  }
+    public void write(T record) throws JournalException {
+        if (!isStarted)
+            start();
+        journalRecordAppender.doAppend(record);
+    }
 
-  public Collection<T> read() {
-    if (!isStarted)
-      start();
-    return this.journalRecordsReader.getJournalRecordCollector().getRecords();
-  }
+    public Collection<T> read() {
+        if (!isStarted)
+            start();
+        return this.journalRecordsReader.getJournalRecordCollector().getRecords();
+    }
 
-  @Override
-  public void start() {
-    journalRecordAppender.start();
-    journalRecordsReader.open();
-    isStarted = true;
-  }
+    @Override
+    public void start() {
+        journalRecordAppender.start();
+        journalRecordsReader.open();
+        isStarted = true;
+    }
 
-  @Override
-  public void stop() {
-    journalRecordAppender.stop();
-    journalRecordsReader.close();
-    isStarted = false;
-  }
+    @Override
+    public void stop() {
+        journalRecordAppender.stop();
+        journalRecordsReader.close();
+        isStarted = false;
+    }
 
-  @Override
-  public boolean isStarted() {
-    return isStarted;
-  }
+    @Override
+    public boolean isStarted() {
+        return isStarted;
+    }
 }

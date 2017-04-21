@@ -9,8 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 public class LoadingDetails {
 
-  @Getter
-  private List<LogLoadingSession> logLoadingSessions;
-  @Getter
-  private LogDataCollector logDataCollector;
+    @Getter
+    private List<LogLoadingSession> logLoadingSessions;
+    @Getter
+    private LogDataCollector logDataCollector;
 }

@@ -11,32 +11,32 @@ import java.util.Properties;
 
 public class LineLogParser implements LogParser {
 
-  String charset = "UTF-8";
-  String displayName = "LineLogParser";
-  String logSource;
+    String charset = "UTF-8";
+    String displayName = "LineLogParser";
+    String logSource;
 
-  @Override
-  public void init(Properties properties) {
+    @Override
+    public void init(Properties properties) {
 
-  }
+    }
 
-  @Override
-  public void initParsingContext(ParsingContext parsingContext) {
+    @Override
+    public void initParsingContext(ParsingContext parsingContext) {
 
-    logSource = parsingContext.getLogSource();
-  }
+        logSource = parsingContext.getLogSource();
+    }
 
-  @Override
-  public LogData parse(String line, ParsingContext parsingContext) throws ParseException {
-    return new LogDataBuilder()
-        .withMessage(line)
-        .withThread(Thread.currentThread().getName())
-        .build();
-  }
+    @Override
+    public LogData parse(String line, ParsingContext parsingContext) throws ParseException {
+        return new LogDataBuilder()
+                .withMessage(line)
+                .withThread(Thread.currentThread().getName())
+                .build();
+    }
 
-  @Override
-  public ParserDescription getParserDescription() {
-    return new ParserDescription(displayName, charset, logSource);
-  }
+    @Override
+    public ParserDescription getParserDescription() {
+        return new ParserDescription(displayName, charset, logSource);
+    }
 
 }

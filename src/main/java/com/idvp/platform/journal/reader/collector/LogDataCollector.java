@@ -19,10 +19,10 @@ import com.idvp.platform.journal.reader.model.LogData;
 
 public interface LogDataCollector {
 
-  void add(LogData... logDatas);
+    void add(LogData... logDatas);
 
-  LogData[] getLogData();
+    LogData[] getLogData();
 
-  int clear();
+    int clear();
 
 }

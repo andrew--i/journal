@@ -6,8 +6,8 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.VFS;
 
 public class SourceFactory {
-  public static VfsSource create(String sourceValue) throws FileSystemException {
-    FileObject fileObject = VFS.getManager().resolveFile(sourceValue);
-    return new VfsSource(fileObject);
-  }
+    public static VfsSource create(String sourceValue) throws FileSystemException {
+        FileObject fileObject = VFS.getManager().resolveFile(sourceValue);
+        return new VfsSource(fileObject);
+    }
 }

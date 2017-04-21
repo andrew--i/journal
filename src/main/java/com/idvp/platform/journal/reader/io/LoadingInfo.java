@@ -22,68 +22,68 @@ import java.io.InputStream;
 
 public class LoadingInfo {
 
-  private String friendlyUrl;
-  private FileObject fileObject;
-  private ObservableInputStreamImpl observableInputStreamImpl;
-  private InputStream contentInputStream;
-  private boolean tailing;
-  private boolean gziped;
-  private long lastFileSize = 0;
+    private String friendlyUrl;
+    private FileObject fileObject;
+    private ObservableInputStreamImpl observableInputStreamImpl;
+    private InputStream contentInputStream;
+    private boolean tailing;
+    private boolean gziped;
+    private long lastFileSize = 0;
 
-  public InputStream getContentInputStream() {
-    return contentInputStream;
-  }
+    public InputStream getContentInputStream() {
+        return contentInputStream;
+    }
 
-  public void setContentInputStream(InputStream contentInputStream) {
-    this.contentInputStream = contentInputStream;
-  }
+    public void setContentInputStream(InputStream contentInputStream) {
+        this.contentInputStream = contentInputStream;
+    }
 
-  public boolean isTailing() {
-    return tailing;
-  }
+    public boolean isTailing() {
+        return tailing;
+    }
 
-  public void setTailing(boolean tailing) {
-    this.tailing = tailing;
-  }
+    public void setTailing(boolean tailing) {
+        this.tailing = tailing;
+    }
 
-  public boolean isGziped() {
-    return gziped;
-  }
+    public boolean isGziped() {
+        return gziped;
+    }
 
-  public void setGziped(boolean gziped) {
-    this.gziped = gziped;
-  }
+    public void setGziped(boolean gziped) {
+        this.gziped = gziped;
+    }
 
-  public String getFriendlyUrl() {
-    return friendlyUrl;
-  }
+    public String getFriendlyUrl() {
+        return friendlyUrl;
+    }
 
-  public void setFriendlyUrl(String friendlyUrl) {
-    this.friendlyUrl = friendlyUrl;
-  }
+    public void setFriendlyUrl(String friendlyUrl) {
+        this.friendlyUrl = friendlyUrl;
+    }
 
-  public ObservableInputStreamImpl getObservableInputStreamImpl() {
-    return observableInputStreamImpl;
-  }
+    public ObservableInputStreamImpl getObservableInputStreamImpl() {
+        return observableInputStreamImpl;
+    }
 
-  public void setObservableInputStreamImpl(ObservableInputStreamImpl observableInputStreamImpl) {
-    this.observableInputStreamImpl = observableInputStreamImpl;
-  }
+    public void setObservableInputStreamImpl(ObservableInputStreamImpl observableInputStreamImpl) {
+        this.observableInputStreamImpl = observableInputStreamImpl;
+    }
 
-  public FileObject getFileObject() {
-    return fileObject;
-  }
+    public FileObject getFileObject() {
+        return fileObject;
+    }
 
-  public void setFileObject(FileObject fileObject) {
-    this.fileObject = fileObject;
-  }
+    public void setFileObject(FileObject fileObject) {
+        this.fileObject = fileObject;
+    }
 
-  public long getLastFileSize() {
-    return lastFileSize;
-  }
+    public long getLastFileSize() {
+        return lastFileSize;
+    }
 
-  public void setLastFileSize(long lastFileSize) {
-    this.lastFileSize = lastFileSize;
-  }
+    public void setLastFileSize(long lastFileSize) {
+        this.lastFileSize = lastFileSize;
+    }
 
 }

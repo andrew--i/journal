@@ -5,9 +5,9 @@ import ch.qos.logback.core.spi.LifeCycle;
 import com.idvp.platform.journal.JournalException;
 
 public interface JournalAppender<T> extends ContextAware, LifeCycle {
-  void doAppend(T record) throws JournalException;
+    void doAppend(T record) throws JournalException;
 
-  String getName();
+    String getName();
 
-  void setName(String name);
+    void setName(String name);
 }

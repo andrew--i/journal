@@ -10,23 +10,23 @@ import com.idvp.platform.journal.reader.loading.VfsSource;
 
 public interface LogLoader {
 
-  LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector);
+    LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector);
 
-  LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime);
+    LogLoadingSession startLoading(VfsSource source, LogImporter logImporter, LogDataCollector logDataCollector, long sleepTime);
 
-  void pause(LogLoadingSession logLoadingSession);
+    void pause(LogLoadingSession logLoadingSession);
 
-  void resume(LogLoadingSession logLoadingSession);
+    void resume(LogLoadingSession logLoadingSession);
 
-  void stop(LogLoadingSession logLoadingSession);
+    void stop(LogLoadingSession logLoadingSession);
 
-  void close(LogLoadingSession logDataCollector);
+    void close(LogLoadingSession logDataCollector);
 
-  void close(LogDataCollector logDataCollector);
+    void close(LogDataCollector logDataCollector);
 
-  LoadStatistic getLoadStatistic(LogLoadingSession logLoadingSession);
+    LoadStatistic getLoadStatistic(LogLoadingSession logLoadingSession);
 
-  LoadingDetails getLoadingDetails(LogDataCollector logDataCollector);
+    LoadingDetails getLoadingDetails(LogDataCollector logDataCollector);
 
-  void shutdown();
+    void shutdown();
 }

@@ -12,38 +12,38 @@ import java.util.stream.Collectors;
 
 public class JournalRecordCollector<T> implements LogDataCollector {
 
-  private LogDataCollector logDataCollector;
+    private LogDataCollector logDataCollector;
 
-  private JournalRecordTransformer<T> journalRecordTransformer;
+    private JournalRecordTransformer<T> journalRecordTransformer;
 
-  public JournalRecordCollector(JournalRecordTransformer<T> journalRecordTransformer, LogDataCollector logDataCollector) {
-    this.journalRecordTransformer = journalRecordTransformer;
-    this.logDataCollector = logDataCollector;
-  }
+    public JournalRecordCollector(JournalRecordTransformer<T> journalRecordTransformer, LogDataCollector logDataCollector) {
+        this.journalRecordTransformer = journalRecordTransformer;
+        this.logDataCollector = logDataCollector;
+    }
 
 
-  @Override
-  public synchronized void add(LogData... logDatas) {
-    logDataCollector.add(logDatas);
-  }
+    @Override
+    public synchronized void add(LogData... logDatas) {
+        logDataCollector.add(logDatas);
+    }
 
-  @Override
-  public synchronized LogData[] getLogData() {
-    return logDataCollector.getLogData();
-  }
+    @Override
+    public synchronized LogData[] getLogData() {
+        return logDataCollector.getLogData();
+    }
 
-  @Override
-  public synchronized int clear() {
-    return logDataCollector.clear();
-  }
+    @Override
+    public synchronized int clear() {
+        return logDataCollector.clear();
+    }
 
-  public Collection<T> getRecords() {
-    final LogData[] logData = getLogData();
-    List<T> records = Arrays.stream(logData)
-        .map(ld -> journalRecordTransformer.fromString(ld.getMessage()))
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .collect(Collectors.toList());
-    return records;
-  }
+    public Collection<T> getRecords() {
+        final LogData[] logData = getLogData();
+        List<T> records = Arrays.stream(logData)
+                .map(ld -> journalRecordTransformer.fromString(ld.getMessage()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+        return records;
+    }
 }

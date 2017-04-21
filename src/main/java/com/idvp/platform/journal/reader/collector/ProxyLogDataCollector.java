@@ -23,29 +23,29 @@ import java.util.List;
 
 public class ProxyLogDataCollector implements LogDataCollector {
 
-  protected List<LogData> list;
+    protected List<LogData> list;
 
-  public ProxyLogDataCollector() {
-    list = new ArrayList<>();
-  }
-
-  public void add(LogData... logDatas) {
-    for (LogData logData : logDatas) {
-      list.add(logData);
+    public ProxyLogDataCollector() {
+        list = new ArrayList<>();
     }
-  }
 
-  public LogData[] getLogData() {
-    LogData[] datas = new LogData[list.size()];
-    datas = list.toArray(datas);
-    return datas;
-  }
+    public void add(LogData... logDatas) {
+        for (LogData logData : logDatas) {
+            list.add(logData);
+        }
+    }
 
-  @Override
-  public int clear() {
-    int size = list.size();
-    list.clear();
-    return size;
-  }
+    public LogData[] getLogData() {
+        LogData[] datas = new LogData[list.size()];
+        datas = list.toArray(datas);
+        return datas;
+    }
+
+    @Override
+    public int clear() {
+        int size = list.size();
+        list.clear();
+        return size;
+    }
 
 }
