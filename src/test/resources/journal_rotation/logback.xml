@@ -7,11 +7,11 @@
                 <!-- daily rollover -->
                 <fileNamePattern>${JOURNAL_DIRECTORY_PATH}\archive\%d{yyyy-MM-dd_HH_mm}.%i.journal</fileNamePattern>
                 <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                     <maxFileSize>1KB</maxFileSize>
                 </timeBasedFileNamingAndTriggeringPolicy>
             </rollingPolicy>
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
         </appender>
     </logger>
 

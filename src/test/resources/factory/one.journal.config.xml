@@ -1,6 +1,7 @@
 <journals>
     <journal debug="true" key="one" class="java.lang.String">
-        <appender name="slf4j" class="com.idvp.platform.journal.appender.SLF4JJournalAppender" logger="journalLogger_3"/>
+        <appender name="slf4j" class="com.idvp.platform.journal.appender.SLF4JJournalAppender"
+                  logger="journalLogger_3"/>
         <reader name="r1" collector="com.idvp.platform.journal.reader.collector.ProxyLogDataCollector"
                 source="${JOURNAL_FILE_PATH}"/>
     </journal>

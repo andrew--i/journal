@@ -3,7 +3,7 @@
         <appender name="journalFile" class="ch.qos.logback.core.FileAppender">
             <file>${JOURNAL_FILE_PATH}</file>
             <append>true</append>
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
         </appender>
     </logger>
 </configuration>

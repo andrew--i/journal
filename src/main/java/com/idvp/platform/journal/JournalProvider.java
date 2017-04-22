@@ -3,7 +3,7 @@ package com.idvp.platform.journal;
 import ch.qos.logback.core.spi.LifeCycle;
 import ch.qos.logback.core.util.Loader;
 import com.idvp.platform.journal.configuration.JournalProviderConfigurator;
-import com.idvp.platform.journal.configuration.discriminator.JournalDiscriminator;
+import com.idvp.platform.journal.configuration.discriminator.JournalDiscriminatorDefault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,7 @@ public class JournalProvider implements LifeCycle {
 
     private String configPath;
     private volatile AtomicBoolean isStarted = new AtomicBoolean(false);
-    private JournalDiscriminator journalDiscriminator;
+    private JournalDiscriminatorDefault journalDiscriminator;
     private String configContent;
 
     public JournalProvider() {
@@ -38,7 +38,7 @@ public class JournalProvider implements LifeCycle {
             } else {
                 this.configContent = configurator.configByPath(configPath, Loader.getTCL());
             }
-            journalDiscriminator = configurator.createDiscriminator(this.configContent);
+            journalDiscriminator = configurator.createDiscriminator(this, this.configContent);
         } catch (JournalException e) {
             stop();
             logger.error("Could not initialize journal factory", e);
@@ -97,6 +97,26 @@ public class JournalProvider implements LifeCycle {
         return journalFactory.get(journalKey);
     }
 
+    public Journal getByRecord(String key, String discriminatorValue, Object record) {
+        JournalFactory journalFactory;
+        if (!journalFactoryMap.containsKey(discriminatorValue)) {
+            journalFactory = createJournalFactory(key, discriminatorValue);
+        } else {
+            journalFactory = journalFactoryMap.get(discriminatorValue);
+        }
+        return journalFactory.getByRecord(record);
+    }
+
+    public Journal getByClass(String key, String discriminatorValue, Class<?> journalRecordClass) {
+        JournalFactory journalFactory;
+        if (!journalFactoryMap.containsKey(discriminatorValue)) {
+            journalFactory = createJournalFactory(key, discriminatorValue);
+        } else {
+            journalFactory = journalFactoryMap.get(discriminatorValue);
+        }
+        return journalFactory.getByClass(journalRecordClass);
+    }
+
 
     private JournalFactory getOrCreateJournalFactoryByRecord(Object record) {
         final String value = journalDiscriminator.getJournalDiscriminatingValueByRecord(record);
@@ -118,7 +138,6 @@ public class JournalProvider implements LifeCycle {
             return journalFactoryMap.get(journalDiscriminatorKey);
         return createJournalFactory(journalDiscriminator.getKey(), journalDiscriminatorKey);
     }
-
 
     private JournalFactory createJournalFactory(String discriminatorKey, String discriminatorValue) {
         final String journalFactoryConfig = configContent.replace("${" + discriminatorKey + "}", discriminatorValue);

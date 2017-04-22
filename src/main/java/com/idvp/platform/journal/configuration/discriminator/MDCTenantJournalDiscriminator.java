@@ -1,27 +1,37 @@
 package com.idvp.platform.journal.configuration.discriminator;
 
-import ch.qos.logback.classic.sift.MDCBasedDiscriminator;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.slf4j.MDC;
 
-public class MDCTenantJournalDiscriminator extends MDCBasedDiscriminator implements JournalDiscriminator {
+import java.io.File;
 
-    public MDCTenantJournalDiscriminator() {
-        setDefaultValue(null);
-        setKey("tenantId");
+public class MDCTenantJournalDiscriminator extends JournalDiscriminatorDefault {
+    private final static String tenantKey = "tenantId";
+
+    @Override
+    public String getKey() {
+        return tenantKey;
+    }
+
+    @Override
+    public String getDiscriminatingValue(ILoggingEvent iLoggingEvent) {
+        return MDC.get("tenantId") + File.separator + super.getDiscriminatingValue(iLoggingEvent);
     }
 
     @Override
     public String getJournalDiscriminatingValueByRecord(Object record) {
-        return MDC.get("tenantId");
+        final String discriminatorValue = MDC.get("tenantId");
+        return discriminatorValue + File.separator + getJournalKeyByRecord(tenantKey, discriminatorValue, record);
     }
 
     @Override
     public String getJournalDiscriminatingValueByClass(Class<?> journalRecordClass) {
-        return MDC.get("tenantId");
+        final String discriminatorValue = MDC.get("tenantId");
+        return MDC.get("tenantId") + File.separator + getJournalKeyByClass(tenantKey, discriminatorValue, journalRecordClass);
     }
 
     @Override
     public String getJournalDiscriminatingValueByJournalKey(String journalKey) {
-        return MDC.get("tenantId");
+        return MDC.get("tenantId") + File.separator + journalKey;
     }
 }

@@ -2,8 +2,8 @@ package com.idvp.platform.journal.configuration;
 
 import ch.qos.logback.core.util.Loader;
 import com.idvp.platform.journal.JournalException;
-import com.idvp.platform.journal.configuration.discriminator.JournalDiscriminator;
-import com.idvp.platform.journal.configuration.discriminator.NoOpJournalDiscriminator;
+import com.idvp.platform.journal.JournalProvider;
+import com.idvp.platform.journal.configuration.discriminator.JournalDiscriminatorDefault;
 import jdk.nashorn.api.scripting.URLReader;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
@@ -64,16 +64,16 @@ public class JournalProviderConfigurator {
         return configureByResource(url);
     }
 
-    public JournalDiscriminator createDiscriminator(String configContent) throws JournalException {
+    public JournalDiscriminatorDefault createDiscriminator(JournalProvider journalProvider, String configContent) throws JournalException {
         if (StringUtils.isEmpty(configContent))
-            return new NoOpJournalDiscriminator();
+            return new JournalDiscriminatorDefault();
         StringBuilder discriminatorClass = new StringBuilder();
         try (StringReader stringReader = new StringReader(configContent)) {
             final Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(stringReader));
             final NodeList discriminatorNodes = document.getElementsByTagName("discriminator");
 
             if (discriminatorNodes.getLength() == 0 || discriminatorNodes.getLength() > 1)
-                return new NoOpJournalDiscriminator();
+                return new JournalDiscriminatorDefault();
 
             discriminatorClass.append(discriminatorNodes.item(0).getAttributes().getNamedItem("class").getNodeValue());
 
@@ -82,11 +82,13 @@ public class JournalProviderConfigurator {
         }
 
         if (discriminatorClass.length() == 0)
-            return new NoOpJournalDiscriminator();
+            return new JournalDiscriminatorDefault();
 
         try {
-            final Class<?> discriminator = Class.forName(discriminatorClass.toString());
-            return (JournalDiscriminator) discriminator.newInstance();
+            final Class<? extends JournalDiscriminatorDefault> discriminator = (Class<? extends JournalDiscriminatorDefault>) Class.forName(discriminatorClass.toString());
+            final JournalDiscriminatorDefault journalDiscriminatorDefault = discriminator.newInstance();
+            journalDiscriminatorDefault.setJournalProvider(journalProvider);
+            return journalDiscriminatorDefault;
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             throw new JournalException("Could not create discriminator instance", e);
         }

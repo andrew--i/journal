@@ -21,47 +21,47 @@ import static org.awaitility.Awaitility.await;
 
 public class BasicLogLoaderTest extends JournalTestBase {
 
-  LogLoader logLoader;
+    LogLoader logLoader;
 
-  @Before
-  public void setUp() throws Exception {
-    logLoader = new BasicLogLoader();
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    super.tearDown();
-    logLoader.shutdown();
-  }
-
-  private FileObject createLocalFileObject(String fileName) throws IOException {
-    final File file = new File(fileName);
-    if (file.exists())
-      file.delete();
-    file.createNewFile();
-
-    return VFS.getManager().resolveFile(file.getAbsolutePath());
-  }
-
-  private void writeToFileObject(FileObject fileObject) throws IOException {
-    try (OutputStream outputStream = fileObject.getContent().getOutputStream(true)) {
-      try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream))) {
-        bufferedWriter.write("Current time is " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-        bufferedWriter.newLine();
-      }
+    @Before
+    public void setUp() throws Exception {
+        logLoader = new BasicLogLoader();
     }
-  }
 
-  @Test
-  public void testLogLoaderApi() throws Exception {
+    @After
+    public void tearDown() throws Exception {
+        super.tearDown();
+        logLoader.shutdown();
+    }
 
-    ProxyLogDataCollector logDataCollector = new ProxyLogDataCollector();
-    FileObject localFileObject = createLocalFileObject(getTestPathFor("checkApi.txt"));
-    logLoader.startLoading(new VfsSource(localFileObject), new LogImporterUsingParser(new LineLogParser()), logDataCollector);
-    Assert.assertEquals(0, logDataCollector.getLogData().length);
-    writeToFileObject(localFileObject);
-    await().until(() -> logDataCollector.getLogData().length > 0);
-    Assert.assertEquals(1, logDataCollector.getLogData().length);
-    localFileObject.delete();
-  }
+    private FileObject createLocalFileObject(String fileName) throws IOException {
+        final File file = new File(fileName);
+        if (file.exists())
+            file.delete();
+        file.createNewFile();
+
+        return VFS.getManager().resolveFile(file.getAbsolutePath());
+    }
+
+    private void writeToFileObject(FileObject fileObject) throws IOException {
+        try (OutputStream outputStream = fileObject.getContent().getOutputStream(true)) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+                bufferedWriter.write("Current time is " + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                bufferedWriter.newLine();
+            }
+        }
+    }
+
+    @Test
+    public void testLogLoaderApi() throws Exception {
+
+        ProxyLogDataCollector logDataCollector = new ProxyLogDataCollector();
+        FileObject localFileObject = createLocalFileObject(getTestPathFor("checkApi.txt"));
+        logLoader.startLoading(new VfsSource(localFileObject), new LogImporterUsingParser(new LineLogParser()), logDataCollector);
+        Assert.assertEquals(0, logDataCollector.getLogData().length);
+        writeToFileObject(localFileObject);
+        await().until(() -> logDataCollector.getLogData().length > 0);
+        Assert.assertEquals(1, logDataCollector.getLogData().length);
+        localFileObject.delete();
+    }
 }

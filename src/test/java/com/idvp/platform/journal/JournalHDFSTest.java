@@ -7,14 +7,12 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
-import org.awaitility.Duration;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
 
-import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 
 

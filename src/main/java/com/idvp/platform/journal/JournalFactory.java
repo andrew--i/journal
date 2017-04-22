@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,22 @@ public class JournalFactory extends ContextBase implements LifeCycle {
 
     public <T> Journal<T> get(String key) {
         return journals.getOrDefault(key, null);
+    }
+
+    public <T> Journal<T> getByRecord(Object record) {
+        for (Journal journal : journals.values()) {
+            if (journal.getTClass().getName().equalsIgnoreCase(record.getClass().getName()))
+                return journal;
+        }
+        return null;
+    }
+
+    public <T> Journal<T> getByClass(Class<?> aClass) {
+        for (Journal journal : journals.values()) {
+            if (journal.getTClass().getName().equalsIgnoreCase(aClass.getName()))
+                return journal;
+        }
+        return null;
     }
 
 
@@ -79,10 +96,9 @@ public class JournalFactory extends ContextBase implements LifeCycle {
     public <T> Collection<T> read(String key) {
         if (!isStarted())
             start();
-        Journal journal = get(key);
+        Journal<T> journal = get(key);
         if (journal == null)
             return Collections.emptyList();
         return journal.read();
     }
-
 }
