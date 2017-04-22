@@ -38,7 +38,7 @@ public class JournalProvider implements LifeCycle {
             } else {
                 this.configContent = configurator.configByPath(configPath, Loader.getTCL());
             }
-            journalDiscriminator = configurator.createDiscriminator(this, this.configContent);
+            journalDiscriminator = configurator.createDiscriminator(this.configContent);
         } catch (JournalException e) {
             stop();
             logger.error("Could not initialize journal factory", e);
@@ -96,27 +96,6 @@ public class JournalProvider implements LifeCycle {
         final JournalFactory journalFactory = getOrCreateJournalFactoryByKey(journalKey);
         return journalFactory.get(journalKey);
     }
-
-    public Journal getByRecord(String key, String discriminatorValue, Object record) {
-        JournalFactory journalFactory;
-        if (!journalFactoryMap.containsKey(discriminatorValue)) {
-            journalFactory = createJournalFactory(key, discriminatorValue);
-        } else {
-            journalFactory = journalFactoryMap.get(discriminatorValue);
-        }
-        return journalFactory.getByRecord(record);
-    }
-
-    public Journal getByClass(String key, String discriminatorValue, Class<?> journalRecordClass) {
-        JournalFactory journalFactory;
-        if (!journalFactoryMap.containsKey(discriminatorValue)) {
-            journalFactory = createJournalFactory(key, discriminatorValue);
-        } else {
-            journalFactory = journalFactoryMap.get(discriminatorValue);
-        }
-        return journalFactory.getByClass(journalRecordClass);
-    }
-
 
     private JournalFactory getOrCreateJournalFactoryByRecord(Object record) {
         final String value = journalDiscriminator.getJournalDiscriminatingValueByRecord(record);

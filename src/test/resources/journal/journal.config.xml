@@ -1,7 +1,9 @@
 <journals debug="true">
+    <discriminator class="com.idvp.platform.journal.configuration.discriminator.MDCTenantJournalDiscriminator"/>
+
     <journal key="other_journal" class="java.lang.String">
         <appender name="slf4j" class="com.idvp.platform.journal.appender.SLF4JJournalAppender" logger="journalLogger"/>
         <reader name="r1" collector="com.idvp.platform.journal.reader.collector.ProxyLogDataCollector"
-                source="${JOURNAL_FILE_PATH}"/>
+                source="${JOURNAL_DIRECTORY_PATH}/${tenantId}/"/>
     </journal>
 </journals>

@@ -1,6 +1,7 @@
 package com.idvp.platform.journal.appender;
 
 import com.idvp.platform.journal.JournalRecordTransformer;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
@@ -16,9 +17,12 @@ public class SLF4JJournalAppender<T> extends JournalAppenderBase<T> {
     }
 
     @Override
-    protected void append(T record) {
+    protected void append(String key, T record) {
         Optional<String> message = recordTransformer.toString(record);
-        message.ifPresent(m -> LoggerFactory.getLogger(loggerName).info(m));
+        message.ifPresent(m -> {
+            Logger logger = LoggerFactory.getLogger(loggerName);
+            logger.info(m, key);
+        });
     }
 
     public static class SLF4jJournalAppenderParameter<T> {

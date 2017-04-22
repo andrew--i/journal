@@ -1,18 +1,26 @@
 <configuration debug="true">
+    <appender name="journalSift" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator class="com.idvp.platform.journal.configuration.discriminator.MDCTenantJournalDiscriminator"/>
+        <sift>
+            <appender name="journalFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${JOURNAL_DIRECTORY_PATH}\${tenantId}\${JOURNAL_FILE}</file>
+                <append>true</append>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <!-- daily rollover -->
+                    <fileNamePattern>${JOURNAL_DIRECTORY_PATH}\${tenantId}\archive\%d{yyyy-MM-dd_HH_mm}.%i.journal</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy
+                            class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>1KB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                </rollingPolicy>
+                <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+            </appender>
+        </sift>
+    </appender>
+
+
     <logger name="journalLogger">
-        <appender name="journalFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${JOURNAL_FILE_PATH}</file>
-            <append>true</append>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <!-- daily rollover -->
-                <fileNamePattern>${JOURNAL_DIRECTORY_PATH}\archive\%d{yyyy-MM-dd_HH_mm}.%i.journal</fileNamePattern>
-                <timeBasedFileNamingAndTriggeringPolicy
-                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                    <maxFileSize>1KB</maxFileSize>
-                </timeBasedFileNamingAndTriggeringPolicy>
-            </rollingPolicy>
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-        </appender>
+        <appender-ref ref="journalSift"/>
     </logger>
 
     <root level="TRACE">

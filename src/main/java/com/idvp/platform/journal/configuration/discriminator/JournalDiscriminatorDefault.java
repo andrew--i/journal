@@ -2,30 +2,24 @@ package com.idvp.platform.journal.configuration.discriminator;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.sift.Discriminator;
-import com.idvp.platform.journal.Journal;
 import com.idvp.platform.journal.JournalProvider;
-
-import java.util.Map;
 
 public class JournalDiscriminatorDefault implements Discriminator<ILoggingEvent> {
 
     public static final String journalKey = "com.idvp.platform.journal.key";
     public static final String defaultValue = "journal";
 
-    protected JournalProvider journalProvider;
     private boolean isStarted;
-
-    public void setJournalProvider(JournalProvider journalProvider) {
-        this.journalProvider = journalProvider;
-    }
 
     @Override
     public String getDiscriminatingValue(ILoggingEvent iLoggingEvent) {
 //        be careful journalProvider there is always null
-        final Map<String, String> mdcPropertyMap = iLoggingEvent.getMDCPropertyMap();
-        if (!mdcPropertyMap.containsKey(journalKey))
+        Object[] argumentArray = iLoggingEvent.getArgumentArray();
+        if (argumentArray == null || argumentArray.length == 0)
             return defaultValue;
-        return mdcPropertyMap.get(journalKey);
+        if (!(argumentArray[0] instanceof String))
+            return defaultValue;
+        return argumentArray[0].toString();
     }
 
     @Override
@@ -34,29 +28,15 @@ public class JournalDiscriminatorDefault implements Discriminator<ILoggingEvent>
     }
 
     public String getJournalDiscriminatingValueByRecord(Object record) {
-        return getJournalKeyByRecord(journalKey, defaultValue, record);
+        return defaultValue;
     }
 
     public String getJournalDiscriminatingValueByClass(Class<?> journalRecordClass) {
-        return getJournalKeyByClass(journalKey, defaultValue, journalRecordClass);
+        return defaultValue;
     }
 
     public String getJournalDiscriminatingValueByJournalKey(String journalKey) {
         return journalKey;
-    }
-
-    protected String getJournalKeyByRecord(String key, String discriminatorValue, Object record) {
-        final Journal journal = journalProvider.getByRecord(key, discriminatorValue, record);
-        if (journal == null)
-            throw new IllegalArgumentException("Could not find journal by discriminator value " + discriminatorValue);
-        return journal.getKey();
-    }
-
-    protected String getJournalKeyByClass(String key, String discriminatorValue, Class<?> aClass) {
-        final Journal journal = journalProvider.getByClass(key, discriminatorValue, aClass);
-        if (journal == null)
-            throw new IllegalArgumentException("Could not find journal by discriminator value " + discriminatorValue);
-        return journal.getKey();
     }
 
     @Override

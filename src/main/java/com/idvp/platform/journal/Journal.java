@@ -57,7 +57,7 @@ public class Journal<T> implements LifeCycle {
     public void write(T record) throws JournalException {
         if (!isStarted)
             start();
-        journalRecordAppender.doAppend(record);
+        journalRecordAppender.doAppend(key, record);
     }
 
     public Collection<T> read() {

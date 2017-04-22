@@ -2,7 +2,6 @@ package com.idvp.platform.journal.configuration;
 
 import ch.qos.logback.core.util.Loader;
 import com.idvp.platform.journal.JournalException;
-import com.idvp.platform.journal.JournalProvider;
 import com.idvp.platform.journal.configuration.discriminator.JournalDiscriminatorDefault;
 import jdk.nashorn.api.scripting.URLReader;
 import org.apache.commons.lang.StringUtils;
@@ -64,7 +63,7 @@ public class JournalProviderConfigurator {
         return configureByResource(url);
     }
 
-    public JournalDiscriminatorDefault createDiscriminator(JournalProvider journalProvider, String configContent) throws JournalException {
+    public JournalDiscriminatorDefault createDiscriminator(String configContent) throws JournalException {
         if (StringUtils.isEmpty(configContent))
             return new JournalDiscriminatorDefault();
         StringBuilder discriminatorClass = new StringBuilder();
@@ -86,9 +85,7 @@ public class JournalProviderConfigurator {
 
         try {
             final Class<? extends JournalDiscriminatorDefault> discriminator = (Class<? extends JournalDiscriminatorDefault>) Class.forName(discriminatorClass.toString());
-            final JournalDiscriminatorDefault journalDiscriminatorDefault = discriminator.newInstance();
-            journalDiscriminatorDefault.setJournalProvider(journalProvider);
-            return journalDiscriminatorDefault;
+            return discriminator.newInstance();
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             throw new JournalException("Could not create discriminator instance", e);
         }

@@ -13,26 +13,12 @@ public class JournalFolderTest extends JournalTestBase {
 
     @Override
     protected String getJournalFile() {
-        return "JournalFolderTest/JournalFolderTest.journal";
+        return "JournalFolderTest.journal";
     }
 
     @Override
     protected String getLogbackConfigFile() {
         return "journal_folder/logback.xml";
-    }
-
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        String journalDir = getTestPathFor("JournalFolderTest");
-        System.setProperty("JOURNAL_DIRECTORY_PATH", journalDir);
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        String journalDir = getTestPathFor("JournalFolderTest");
-        new File(journalDir).delete();
     }
 
     @Test

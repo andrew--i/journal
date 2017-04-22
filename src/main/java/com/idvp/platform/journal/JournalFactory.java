@@ -35,22 +35,6 @@ public class JournalFactory extends ContextBase implements LifeCycle {
         return journals.getOrDefault(key, null);
     }
 
-    public <T> Journal<T> getByRecord(Object record) {
-        for (Journal journal : journals.values()) {
-            if (journal.getTClass().getName().equalsIgnoreCase(record.getClass().getName()))
-                return journal;
-        }
-        return null;
-    }
-
-    public <T> Journal<T> getByClass(Class<?> aClass) {
-        for (Journal journal : journals.values()) {
-            if (journal.getTClass().getName().equalsIgnoreCase(aClass.getName()))
-                return journal;
-        }
-        return null;
-    }
-
 
     public void addJournal(Journal journal) {
         journals.putIfAbsent(journal.getKey(), journal);

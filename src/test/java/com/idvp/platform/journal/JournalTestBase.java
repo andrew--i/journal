@@ -3,6 +3,7 @@ package com.idvp.platform.journal;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.vfs2.VFS;
 import org.junit.After;
 import org.junit.Before;
@@ -39,7 +40,15 @@ public class JournalTestBase {
         return filePath;
     }
 
+    protected String getJournalDirName() {
+        return getClass().getSimpleName();
+    }
+
     protected void configureLogging() throws IOException, JoranException {
+        if (getJournalDirName() != null) {
+            String journalDir = getTestPathFor(getJournalDirName());
+            System.setProperty("JOURNAL_DIRECTORY_PATH", journalDir);
+        }
         String logbackConfigFile = getLogbackConfigFile();
         if (logbackConfigFile != null)
             try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(logbackConfigFile)) {
@@ -83,6 +92,15 @@ public class JournalTestBase {
             boolean delete = getJournalPath().delete();
             if (!delete)
                 System.out.println("Please, delete " + getJournalPath().getAbsolutePath());
+        }
+
+        if (getJournalDirName() != null) {
+            String journalDir = getTestPathFor(getJournalDirName());
+            final File directory = new File(journalDir);
+            if (directory.exists()) {
+                FileUtils.cleanDirectory(directory);
+                FileUtils.deleteDirectory(directory);
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ public class JournalFactoryReadWriteTest extends JournalTestBase {
         String message = "some record at " + System.currentTimeMillis();
         journalProvider.write(message);
 
-        Thread.sleep(2100);
+        Thread.sleep(2000);
 
         final Collection<Object> r1 = journalProvider.read("other_journal");
         assertEquals(message, r1.iterator().next());

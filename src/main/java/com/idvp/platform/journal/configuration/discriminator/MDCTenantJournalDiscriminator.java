@@ -1,6 +1,7 @@
 package com.idvp.platform.journal.configuration.discriminator;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import com.idvp.platform.journal.JournalProvider;
 import org.slf4j.MDC;
 
 import java.io.File;
@@ -15,23 +16,26 @@ public class MDCTenantJournalDiscriminator extends JournalDiscriminatorDefault {
 
     @Override
     public String getDiscriminatingValue(ILoggingEvent iLoggingEvent) {
-        return MDC.get("tenantId") + File.separator + super.getDiscriminatingValue(iLoggingEvent);
+        return getTenantValue() + File.separator + super.getDiscriminatingValue(iLoggingEvent);
     }
 
     @Override
     public String getJournalDiscriminatingValueByRecord(Object record) {
-        final String discriminatorValue = MDC.get("tenantId");
-        return discriminatorValue + File.separator + getJournalKeyByRecord(tenantKey, discriminatorValue, record);
+        return getTenantValue();
     }
 
     @Override
     public String getJournalDiscriminatingValueByClass(Class<?> journalRecordClass) {
-        final String discriminatorValue = MDC.get("tenantId");
-        return MDC.get("tenantId") + File.separator + getJournalKeyByClass(tenantKey, discriminatorValue, journalRecordClass);
+        return getTenantValue();
     }
 
     @Override
     public String getJournalDiscriminatingValueByJournalKey(String journalKey) {
-        return MDC.get("tenantId") + File.separator + journalKey;
+        return getTenantValue();
+    }
+
+    private String getTenantValue() {
+        String value = MDC.get(tenantKey);
+        return value == null ? JournalDiscriminatorDefault.defaultValue : value;
     }
 }

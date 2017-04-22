@@ -2,26 +2,33 @@
 
     <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
 
-    <appender name="hdfsAppender" class="com.idvp.platform.logback.appender.hdfs.HDFSAppender">
-        <filePath>webhdfs://localhost:50070/</filePath>
-        <file>string</file>
-        <fileSuffix>.jounral</fileSuffix>
-        <callTimeout>1000</callTimeout>
-        <rollInterval>1</rollInterval>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <appender name="journalSift" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator class="com.idvp.platform.journal.configuration.discriminator.MDCTenantJournalDiscriminator"/>
+        <sift>
+            <appender name="hdfsAppender" class="com.idvp.platform.logback.appender.hdfs.HDFSAppender">
+                <filePath>webhdfs://localhost:50070/${tenantId}/</filePath>
+                <file>string</file>
+                <fileSuffix>.jounral</fileSuffix>
+                <callTimeout>1000</callTimeout>
+                <rollInterval>1</rollInterval>
+                <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+            </appender>
+
+        </sift>
     </appender>
+
+
+    <logger name="journalLogger">
+        <appender-ref ref="journalSift"/>
+    </logger>
+
+
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
         </encoder>
     </appender>
-
-
-    <logger name="journalLogger">
-        <appender-ref ref="hdfsAppender"/>
-    </logger>
-
     <root>
         <appender-ref ref="console"/>
     </root>

@@ -1,14 +1,11 @@
 package com.idvp.platform.journal;
 
-import ch.qos.logback.core.joran.spi.JoranException;
 import com.idvp.platform.journal.configuration.JournalProviderConfigurator;
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.MDC;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.awaitility.Awaitility.await;
@@ -23,22 +20,6 @@ public class JournalTenantsTest extends JournalTestBase {
     @Override
     protected String getLogbackConfigFile() {
         return "journal_tenant/logback.xml";
-    }
-
-    @Override
-    protected void configureLogging() throws IOException, JoranException {
-        String journalDir = getTestPathFor("JournalTenantsTest");
-        System.setProperty("JOURNAL_DIRECTORY_PATH", journalDir);
-        super.configureLogging();
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        String journalDir = getTestPathFor("JournalTenantsTest");
-        final File directory = new File(journalDir);
-        FileUtils.cleanDirectory(directory);
-        FileUtils.deleteDirectory(directory);
     }
 
     @Test

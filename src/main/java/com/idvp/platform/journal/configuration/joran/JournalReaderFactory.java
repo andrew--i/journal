@@ -18,8 +18,8 @@ public class JournalReaderFactory {
 
 
     public static JournalRecordsReader create(String collectorClassName, String sourceValue, Context context, InterpretationContext ic, Attributes attributes) throws DynamicClassLoadingException, IncompatibleClassException, FileSystemException {
-        VfsSource source = SourceFactory.create(sourceValue);
         Journal journal = (Journal) ic.peekObject();
+        VfsSource source = SourceFactory.create(sourceValue, journal.getKey());
         if (collectorClassName.equalsIgnoreCase(TopLogDataCollector.class.getName()))
             return createTopLogDataCollector(source, journal, ic, attributes);
         else {

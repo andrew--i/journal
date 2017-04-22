@@ -1,11 +1,7 @@
 package com.idvp.platform.journal;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
 import org.junit.Test;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +11,6 @@ public class JournalConcurrencyTest extends JournalTestBase {
 
     private JournalProvider journalFactory1;
     private JournalProvider journalFactory2;
-    private String journalDir = getTestPathFor("JournalConcurrencyTest");
 
     @Override
     protected String getJournalFile() {
@@ -25,30 +20,6 @@ public class JournalConcurrencyTest extends JournalTestBase {
     @Override
     protected String getLogbackConfigFile() {
         return "journal_concurrency/logback.xml";
-    }
-
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        Thread.sleep(10000);
-        final File file = new File(journalDir);
-        if (file.exists())
-            FileUtils.deleteQuietly(file);
-        System.setProperty("JOURNAL_DIRECTORY_PATH", journalDir);
-
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        journalFactory1.stop();
-        journalFactory2.stop();
-        final File file = new File((journalDir));
-        for (File f : file.listFiles()) {
-            Files.delete(f.toPath());
-        }
-        Files.delete(file.toPath());
     }
 
     @Test

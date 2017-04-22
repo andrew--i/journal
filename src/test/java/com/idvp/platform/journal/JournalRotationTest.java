@@ -1,11 +1,7 @@
 package com.idvp.platform.journal;
 
-import ch.qos.logback.core.joran.spi.JoranException;
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
@@ -21,23 +17,6 @@ public class JournalRotationTest extends JournalTestBase {
     @Override
     protected String getLogbackConfigFile() {
         return "journal_rotation/logback.xml";
-    }
-
-    @Override
-    protected void configureLogging() throws IOException, JoranException {
-        String journalDir = getTestPathFor("JournalRotationTest");
-        System.setProperty("JOURNAL_DIRECTORY_PATH", journalDir);
-        super.configureLogging();
-    }
-
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        String journalDir = getTestPathFor("JournalRotationTest");
-        final File directory = new File(journalDir);
-        FileUtils.cleanDirectory(directory);
-        FileUtils.deleteDirectory(directory);
     }
 
     @Override

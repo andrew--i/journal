@@ -7,4 +7,11 @@
                 topSize="100"
                 source="${JOURNAL_DIRECTORY_PATH}/${tenantId}/"/>
     </journal>
+
+    <journal key="int_journal" class="java.lang.Integer">
+        <appender name="slf4j" class="com.idvp.platform.journal.appender.SLF4JJournalAppender" logger="journalLogger"/>
+        <reader name="r2" collector="com.idvp.platform.journal.reader.collector.TopLogDataCollector"
+                topSize="100"
+                source="${JOURNAL_DIRECTORY_PATH}/${tenantId}/"/>
+    </journal>
 </journals>

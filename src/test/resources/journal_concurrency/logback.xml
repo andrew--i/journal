@@ -1,19 +1,25 @@
 <configuration debug="true">
+
+    <appender name="journalSift" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator class="com.idvp.platform.journal.configuration.discriminator.MDCTenantJournalDiscriminator"/>
+        <sift>
+            <appender name="journalFile-${tenantId}" class="ch.qos.logback.core.FileAppender">
+                <file>${JOURNAL_DIRECTORY_PATH}\${tenantId}\${JOURNAL_FILE}</file>
+                <append>true</append>
+                <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+            </appender>
+        </sift>
+    </appender>
+
+
     <logger name="journalLogger1">
-        <appender name="journalFile1" class="ch.qos.logback.core.FileAppender">
-            <file>${JOURNAL_FILE_PATH}_1.journal</file>
-            <append>true</append>
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-        </appender>
+        <appender-ref ref="journalSift"/>
     </logger>
 
     <logger name="journalLogger2">
-        <appender name="journalFile2" class="ch.qos.logback.core.FileAppender">
-            <file>${JOURNAL_FILE_PATH}_2.journal</file>
-            <append>true</append>
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-        </appender>
+        <appender-ref ref="journalSift"/>
     </logger>
+
 
     <root>
         <appender name="console-info" class="ch.qos.logback.core.ConsoleAppender">

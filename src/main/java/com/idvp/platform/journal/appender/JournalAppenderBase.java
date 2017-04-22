@@ -18,7 +18,7 @@ public abstract class JournalAppenderBase<T> extends ContextAwareBase implements
         this.name = name;
     }
 
-    public synchronized void doAppend(T record) throws JournalException {
+    public synchronized void doAppend(String key, T record) throws JournalException {
 
         try {
 
@@ -27,7 +27,7 @@ public abstract class JournalAppenderBase<T> extends ContextAwareBase implements
             }
 
             // ok, we now invoke derived class' implementation of append
-            this.append(record);
+            this.append(key, record);
 
         } catch (Exception e) {
             if (e instanceof JournalException) {
@@ -38,7 +38,7 @@ public abstract class JournalAppenderBase<T> extends ContextAwareBase implements
         }
     }
 
-    protected abstract void append(T record);
+    protected abstract void append(String key, T record);
 
     public void start() {
         started = true;
