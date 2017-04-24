@@ -4,6 +4,12 @@
     <journal key="other_journal" class="java.lang.String">
         <appender name="slf4j" class="com.idvp.platform.journal.appender.SLF4JJournalAppender" logger="journalLogger"/>
         <reader name="r1" collector="com.idvp.platform.journal.reader.collector.ProxyLogDataCollector"
-                source="webhdfs://localhost:50070/"/>
+                source="webhdfs://localhost:50070/${tenantId}/"/>
+    </journal>
+
+    <journal key="int_journal" class="java.lang.Integer">
+        <appender name="slf4j" class="com.idvp.platform.journal.appender.SLF4JJournalAppender" logger="journalLogger"/>
+        <reader name="r1" collector="com.idvp.platform.journal.reader.collector.ProxyLogDataCollector"
+                source="webhdfs://localhost:50070/${tenantId}/"/>
     </journal>
 </journals>

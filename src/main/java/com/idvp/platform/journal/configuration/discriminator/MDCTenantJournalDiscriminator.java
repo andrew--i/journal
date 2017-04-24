@@ -1,10 +1,7 @@
 package com.idvp.platform.journal.configuration.discriminator;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import com.idvp.platform.journal.JournalProvider;
 import org.slf4j.MDC;
-
-import java.io.File;
 
 public class MDCTenantJournalDiscriminator extends JournalDiscriminatorDefault {
     private final static String tenantKey = "tenantId";
@@ -16,7 +13,7 @@ public class MDCTenantJournalDiscriminator extends JournalDiscriminatorDefault {
 
     @Override
     public String getDiscriminatingValue(ILoggingEvent iLoggingEvent) {
-        return getTenantValue() + File.separator + super.getDiscriminatingValue(iLoggingEvent);
+        return getTenantValue() + "/" + super.getDiscriminatingValue(iLoggingEvent);
     }
 
     @Override

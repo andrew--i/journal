@@ -10,11 +10,18 @@ import java.net.URI;
 
 public class SourceFactory {
     public static VfsSource create(String sourceValue, String key) throws FileSystemException {
-        String normalizeString = sourceValue.replace("/", File.separator);
-        normalizeString = normalizeString.replace("\\", File.separator);
-        int i = normalizeString.lastIndexOf(File.separator);
-        String newSourceValue = normalizeString.substring(0, i) + File.separator + key + File.separator + normalizeString.substring(i + 1);
-        FileObject fileObject = VFS.getManager().resolveFile(newSourceValue);
+        FileObject fileObject;
+
+        try {
+            String newSourceValue = sourceValue + "/" + key + "/";
+            final URI normalize = URI.create(newSourceValue).normalize();
+            fileObject = VFS.getManager().resolveFile(normalize);
+        } catch (IllegalArgumentException e) {
+            String value = sourceValue.replace("\\", File.separator).replace("/", File.separator);
+            if(!value.endsWith(File.separator))
+                value = value + File.separator;
+            fileObject = VFS.getManager().resolveFile(value + File.separator + key + File.separator);
+        }
         return new VfsSource(fileObject);
     }
 }

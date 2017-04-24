@@ -73,7 +73,10 @@ public class JournalHDFSTest extends JournalTestBase {
     public void testJournalApi() throws Exception {
         String message = "some record at " + System.currentTimeMillis();
         journalProvider.write(message);
+        journalProvider.write(Integer.valueOf(23));
         Thread.sleep(10000);
         assertEquals(message, journalProvider.read(String.class).iterator().next());
+        assertEquals(Integer.valueOf(23), journalProvider.read(Integer.class).iterator().next());
+
     }
 }
